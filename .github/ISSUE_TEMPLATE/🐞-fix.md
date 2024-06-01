@@ -1,6 +1,6 @@
 ---
-name: "\U0001F41E Fix"
-about: Bug 발생 시 작성해주세요
+name: "\U0001F41E FIX"
+about: Bug 발생 시 작성해 주세요
 title: "[FIX] "
 labels: ''
 assignees: ''
@@ -11,7 +11,7 @@ assignees: ''
 버그가 발생한 부분에 대해 작성해 주세요.
 
 
-## ✔ TO DO
+## ✅ TO DO
 해야 할 일을 적어주세요.
 - [ ] 
 
