@@ -1,8 +1,8 @@
 ---
 name: "\U0001F41E Fix"
-about: Bug 발생 시 작성해 주세요
+about: Bug 발생 시 작성해주세요
 title: "[FIX] "
-labels: ''
+labels: '작업: FIX'
 assignees: ''
 
 ---
