@@ -70,10 +70,15 @@ public class ChatStreamService {
                         return Flux.error(e);
                     }
                 })
+                .filter(content -> !content.trim().isEmpty())
                 .bufferUntil(content -> content.endsWith(".") || content.endsWith("?") || content.endsWith("!"))
-                .map(contents -> {
+//                .map(contents -> {
+//                    String completeSentence = String.join("", contents);
+//                    return new ChatStreamResponse(completeSentence);
+//                });
+                .flatMap(contents -> {
                     String completeSentence = String.join("", contents);
-                    return new ChatStreamResponse(completeSentence);
+                    return Flux.just(new ChatStreamResponse(completeSentence));
                 });
     }
 }
