@@ -2,9 +2,8 @@ package com.talkpossible.project.domain.chatGPT.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.talkpossible.project.domain.chatGPT.dto.request.UserChatRequest;
-import com.talkpossible.project.domain.chatGPT.dto.request.UserChatStreamRequest;
 import com.talkpossible.project.domain.chatGPT.dto.response.ChatResponse;
-import com.talkpossible.project.domain.chatGPT.dto.response.ChatStreamResponse;
+import com.talkpossible.project.domain.chatGPT.dto.response.ChatStreamUserResponse;
 import com.talkpossible.project.domain.chatGPT.service.ChatRememberService;
 import com.talkpossible.project.domain.chatGPT.service.ChatService;
 import com.talkpossible.project.domain.chatGPT.service.ChatStreamService;
@@ -37,8 +36,8 @@ public class ChatController {
         return ResponseEntity.ok(chatRememberService.getDailyQuestions(userChatRequest));
     }
     @GetMapping(value = "/chatGPT/streaming", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ChatStreamResponse> getAiResponseStreaming(@RequestBody UserChatStreamRequest userChatRequest) throws JsonProcessingException {
-        return chatStreamService.askToGpt(userChatRequest.getMessage());
+    public Flux<ChatStreamUserResponse> getAiResponseStreaming(@RequestBody UserChatRequest userChatRequest) throws JsonProcessingException {
+        return chatStreamService.askToGpt(userChatRequest);
     }
 
 }

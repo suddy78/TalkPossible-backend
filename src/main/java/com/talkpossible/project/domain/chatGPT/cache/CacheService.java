@@ -34,4 +34,12 @@ public class CacheService {
         cache.put(id, messages);
         return id;
     }
+
+    public String createCacheId(){
+        return UUID.randomUUID().toString();
+    }
+
+    public void putValue(String cacheId, List<Message> messages){
+        cache.put(cacheId, messages);
+    }
 }

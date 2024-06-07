@@ -17,11 +17,13 @@ public class ChatStreanRequest {
     private double temperature;
     private boolean stream;
 
-    public ChatStreanRequest(String model, String prompt) {
+    public ChatStreanRequest(String model, List<Message> messages) {
         this.model = model;
 
-        this.messages = new ArrayList<>();
-        this.messages.add(new Message("user", prompt));
+//        this.messages = new ArrayList<>();
+//        this.messages.add(new Message("user", prompt));
+
+        this.messages = messages;
 
         this.n = 1;
         this.temperature = 0.5;
