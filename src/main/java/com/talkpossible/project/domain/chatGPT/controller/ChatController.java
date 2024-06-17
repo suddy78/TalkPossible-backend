@@ -35,6 +35,7 @@ public class ChatController {
     public ResponseEntity<ChatResponse> getquestions(@RequestBody UserChatRequest userChatRequest) {
         return ResponseEntity.ok(chatRememberService.getDailyQuestions(userChatRequest));
     }
+
     @GetMapping(value = "/chatGPT/streaming", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ChatStreamUserResponse> getAiResponseStreaming(@RequestBody UserChatRequest userChatRequest) throws JsonProcessingException {
         return chatStreamService.askToGpt(userChatRequest);

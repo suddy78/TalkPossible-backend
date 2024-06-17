@@ -19,6 +19,6 @@ public class ChatRequest2 {
         this.messages = messages;
 
         this.n = 1;
-        this.temperature = 1;
+        this.temperature = 0.5;
     }
 }
