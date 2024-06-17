@@ -85,7 +85,14 @@ public class ChatRememberService {
         }
 
         history.add(new Message("system", query1));
-        history.add(new Message("user", userChatRequest.message()));
+        //history.add(new Message("user", userChatRequest.message()));
+        if (userChatRequest.message() != null && !userChatRequest.message().isEmpty()) {
+            history.add(new Message("user", ""));
+        } else {
+            history.add(new Message("system", query1));
+            history.add(new Message("user", userChatRequest.message()));
+        }
+
 
         // Create a request
         ChatRequest2 request1 = new ChatRequest2(model, history);
