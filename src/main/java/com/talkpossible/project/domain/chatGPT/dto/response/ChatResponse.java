@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatResponse {
+    private String cacheId;
 
     private List<Choice> choices;
 
