@@ -2,9 +2,7 @@ package com.talkpossible.project.domain.chatGPT.domain;
 
 import com.talkpossible.project.domain.chatGPT.domain.common.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -34,4 +32,20 @@ public class Conversation extends BaseTimeEntity {
 
     private LocalDateTime send_time;
 
+    @Builder
+    public Conversation(Simulation simulation, Patient patient, String content, LocalDateTime send_time) {
+        this.simulation = simulation;
+        this.patient = patient;
+        this.content = content;
+        this.send_time = send_time;
+    }
+
+    public static Conversation create(Simulation simulation, Patient patient, String content, LocalDateTime send_time) {
+        return Conversation.builder()
+                .simulation(simulation)
+                .patient(patient)
+                .content(content)
+                .send_time(send_time)
+                .build();
+    }
 }
