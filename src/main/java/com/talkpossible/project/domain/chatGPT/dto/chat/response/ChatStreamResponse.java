@@ -1,4 +1,4 @@
-package com.talkpossible.project.domain.chatGPT.dto.response;
+package com.talkpossible.project.domain.chatGPT.dto.chat.response;
 
 import lombok.Data;
 

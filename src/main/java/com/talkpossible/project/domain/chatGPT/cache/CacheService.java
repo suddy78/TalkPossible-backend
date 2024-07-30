@@ -1,14 +1,10 @@
 package com.talkpossible.project.domain.chatGPT.cache;
 
-import com.talkpossible.project.domain.chatGPT.dto.request.ChatMessage;
-import com.talkpossible.project.domain.chatGPT.dto.request.Message;
-import com.talkpossible.project.domain.chatGPT.dto.request.RequestMemorizeMessageDto;
+import com.talkpossible.project.domain.chatGPT.dto.chat.request.Message;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,8 +1,11 @@
 package com.talkpossible.project.domain.chatGPT.service;
 
 import com.talkpossible.project.domain.chatGPT.cache.CacheService;
+import com.talkpossible.project.domain.chatGPT.dto.chat.request.ChatRequest;
+import com.talkpossible.project.domain.chatGPT.dto.chat.request.Message;
+import com.talkpossible.project.domain.chatGPT.dto.chat.request.UserChatRequest;
 import com.talkpossible.project.domain.chatGPT.dto.request.*;
-import com.talkpossible.project.domain.chatGPT.dto.response.ChatResponse;
+import com.talkpossible.project.domain.chatGPT.dto.chat.response.ChatResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +49,6 @@ public class ChatRememberService {
         restaurantMenuMap.put("이탈리안식", Arrays.asList("피자", "파스타", "리조또", "카프레제", "티라미수"));
         restaurantMenuMap.put("멕시칸식", Arrays.asList("타코", "부리또", "퀘사디아", "엔칠라다", "과카몰리"));
 
-
     }
 
     private void selectRandomRestaurantAndMenu() {
@@ -56,7 +58,7 @@ public class ChatRememberService {
         selectedMenu = restaurantMenuMap.get(selectedRestaurant);
     }
 
-    private HttpEntity<ChatRequest2> getHttpEntity(ChatRequest2 chatRequest) {
+    private HttpEntity<ChatRequest> getHttpEntity(ChatRequest chatRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         headers.set("Authorization", "Bearer " + openaiApiKey);
@@ -64,7 +66,7 @@ public class ChatRememberService {
         return new HttpEntity<>(chatRequest, headers);
     }
 
-    public ChatResponse getDailyQuestions(UserChatRequest userChatRequest) {
+    public ChatResponse getGPTAnswer(UserChatRequest userChatRequest) {
 
         selectRandomRestaurantAndMenu();
 
@@ -80,7 +82,6 @@ public class ChatRememberService {
         query1 += "\n3. 메뉴는 " + String.join(", ", selectedMenu) + "를 포함해 여러 가지가 있어.";
         query1 += "\n4. 답변 형식은 '서버: {진지한 질문}' 이 형식으로 적어줘";
 
-
         if(userChatRequest.cacheId()!=null) {
             history = cacheService.getValue(userChatRequest.cacheId());
         } else {
@@ -90,21 +91,20 @@ public class ChatRememberService {
         history.add(new Message("user", userChatRequest.message()));
 
         // Create a request
-        ChatRequest2 request1 = new ChatRequest2(model, history);
+        ChatRequest request = new ChatRequest(model, history);
 
         // Call the API
         RestTemplate restTemplate1 = new RestTemplate();
-        ChatResponse response1 = restTemplate1.postForObject(apiUrl, getHttpEntity(request1), ChatResponse.class);
+        ChatResponse response = restTemplate1.postForObject(apiUrl, getHttpEntity(request), ChatResponse.class);
 
-        if (response1 == null || response1.getChoices() == null || response1.getChoices().isEmpty()) {
+        if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
             throw new RuntimeException();
         }
 
-        history.add(new Message("system", response1.getChoices().get(0).getMessage().getContent()));
+        history.add(new Message("system", response.getChoices().get(0).getMessage().getContent()));
         String cacheId = cacheService.putValue(history);
-        response1.setCacheId(cacheId);
+        response.setCacheId(cacheId);
 
-//        String trueQuestion = response1.getChoices().get(0).getMessage().getContent().substring(8);
-        return response1;
+        return response;
     }
 }

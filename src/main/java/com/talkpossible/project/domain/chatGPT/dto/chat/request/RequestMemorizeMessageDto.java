@@ -1,4 +1,4 @@
-package com.talkpossible.project.domain.chatGPT.dto.request;
+package com.talkpossible.project.domain.chatGPT.dto.chat.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

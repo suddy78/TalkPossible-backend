@@ -1,11 +1,10 @@
 package com.talkpossible.project.domain.chatGPT.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.talkpossible.project.domain.chatGPT.dto.request.UserChatRequest;
-import com.talkpossible.project.domain.chatGPT.dto.response.ChatResponse;
-import com.talkpossible.project.domain.chatGPT.dto.response.ChatStreamUserResponse;
+import com.talkpossible.project.domain.chatGPT.dto.chat.request.UserChatRequest;
+import com.talkpossible.project.domain.chatGPT.dto.chat.response.ChatResponse;
+import com.talkpossible.project.domain.chatGPT.dto.chat.response.ChatStreamUserResponse;
 import com.talkpossible.project.domain.chatGPT.service.ChatRememberService;
-import com.talkpossible.project.domain.chatGPT.service.ChatService;
 import com.talkpossible.project.domain.chatGPT.service.ChatStreamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -18,19 +17,12 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/api/v1")
 public class ChatController {
 
-    private final ChatService chatService;
     private final ChatRememberService chatRememberService;
     private final ChatStreamService chatStreamService;
 
-    @PostMapping("/chatGPT")
-    public void getquestion() {
-        chatService.getDailyQuestions();
-    }
-
-
     @PostMapping("/chatGPT/remember")
     public ResponseEntity<ChatResponse> getquestions(@RequestBody UserChatRequest userChatRequest) {
-        return ResponseEntity.ok(chatRememberService.getDailyQuestions(userChatRequest));
+        return ResponseEntity.ok(chatRememberService.getGPTAnswer(userChatRequest));
     }
 
     @PostMapping(value = "/chatGPT/streaming", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

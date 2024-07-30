@@ -1,8 +1,7 @@
-package com.talkpossible.project.domain.chatGPT.dto.request;
+package com.talkpossible.project.domain.chatGPT.dto.chat.request;
 
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,11 +12,10 @@ public class ChatRequest {
     private int n;
     private double temperature;
 
-    public ChatRequest(String model, String prompt) {
+    public ChatRequest(String model, List<Message> messages) {
         this.model = model;
 
-        this.messages = new ArrayList<>();
-        this.messages.add(new Message("user", prompt));
+        this.messages = messages;
 
         this.n = 1;
         this.temperature = 0.5;
