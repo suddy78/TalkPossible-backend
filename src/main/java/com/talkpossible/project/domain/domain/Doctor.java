@@ -30,6 +30,6 @@ public class Doctor extends BaseTimeEntity {
     @Column(nullable = false)
     private String password;
 
-    private String phone_num;
+    private String phoneNum;
 
 }

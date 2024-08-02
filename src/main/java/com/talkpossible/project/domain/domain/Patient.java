@@ -31,7 +31,7 @@ public class Patient extends BaseTimeEntity {
 
     private LocalDate birthday;
 
-    private String phone_num;
+    private String phoneNum;
 
     @Column(nullable = false)
     private Boolean gender;

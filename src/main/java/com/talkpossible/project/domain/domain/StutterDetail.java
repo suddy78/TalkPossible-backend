@@ -24,10 +24,10 @@ public class StutterDetail extends BaseTimeEntity {
     private Simulation simulation;
 
     @Column(nullable = false)
-    private String image_url;
+    private String imageUrl;
 
     @Column(nullable = false)
-    private String audio_url;
+    private String audioUrl;
 
     @Column(nullable = false)
     private String words;

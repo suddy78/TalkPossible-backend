@@ -23,33 +23,29 @@ public class MotionDetail extends BaseTimeEntity {
     @JoinColumn(name = "simulation_id", nullable = false)
     private Simulation simulation;
 
-    private String situationDate;
-
     private String motionName;
 
     private String timestamp;
 
-    private String video_url;
+    private String videoUrl;
 
     @Builder
     private MotionDetail(
             Simulation simulation, String situationDate,
-            String motionName, String timestamp, String video_url
+            String motionName, String timestamp, String videoUrl
     ) {
         this.simulation = simulation;
-        this.situationDate = situationDate;
         this.motionName = motionName;
         this.timestamp = timestamp;
-        this.video_url = video_url;
+        this.videoUrl = videoUrl;
     }
 
     public static MotionDetail of(Simulation simulation, UserMotionRequest userMotionRequest, UserMotionRequest.Motion motion) {
         return MotionDetail.builder()
                 .simulation(simulation)
-                .situationDate(userMotionRequest.situationDate())
                 .motionName(motion.motionName())
                 .timestamp(motion.timestamp())
-                .video_url(userMotionRequest.videoUrl())
+                .videoUrl(userMotionRequest.videoUrl())
                 .build();
     }
 }

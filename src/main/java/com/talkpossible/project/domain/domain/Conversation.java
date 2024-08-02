@@ -30,22 +30,22 @@ public class Conversation extends BaseTimeEntity {
     @Column(name = "TEXT", nullable = false)
     private String content;
 
-    private LocalDateTime send_time;
+    private LocalDateTime sendTime;
 
     @Builder
-    private Conversation(Simulation simulation, Patient patient, String content, LocalDateTime send_time) {
+    private Conversation(Simulation simulation, Patient patient, String content, LocalDateTime sendTime) {
         this.simulation = simulation;
         this.patient = patient;
         this.content = content;
-        this.send_time = send_time;
+        this.sendTime = send_time;
     }
 
-    public static Conversation create(Simulation simulation, Patient patient, String content, LocalDateTime send_time) {
+    public static Conversation create(Simulation simulation, Patient patient, String content, LocalDateTime sendTime) {
         return Conversation.builder()
                 .simulation(simulation)
                 .patient(patient)
                 .content(content)
-                .send_time(send_time)
+                .sendTime(sendTime)
                 .build();
     }
 }

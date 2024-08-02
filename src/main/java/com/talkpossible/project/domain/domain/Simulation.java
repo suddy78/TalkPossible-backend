@@ -30,12 +30,12 @@ public class Simulation extends BaseTimeEntity {
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
-    private LocalDate run_date;
+    private LocalDate runDate;
 
-    private Time total_time;
+    private Time totalTime;
 
-    private int words_per_min;
+    private int wordsPerMin;
 
-    private Boolean is_stutter;
+    private Boolean isStutter;
 
 }

@@ -26,7 +26,7 @@ public class Situation {
     private String title;
 
     @Column(name = "TEXT", nullable = false)
-    private String thumbnail_url;
+    private String thumbnailUrl;
 
     @Column(nullable = false)
     private String description;
