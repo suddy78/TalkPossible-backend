@@ -20,7 +20,6 @@ public class PatientMission extends BaseTimeEntity {
     @Column(name = "patient_mission_id")
     private Long id;
 
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;

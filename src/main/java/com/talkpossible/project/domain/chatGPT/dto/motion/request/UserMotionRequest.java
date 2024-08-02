@@ -6,7 +6,8 @@ public record UserMotionRequest(
         Long situationId,
         Long patientId,
         String situationDate,
-        List<Motion> motionList
+        List<Motion> motionList,
+        String videoUrl
 ) {
     public record Motion(
             String motionName,

@@ -33,7 +33,7 @@ public class Conversation extends BaseTimeEntity {
     private LocalDateTime send_time;
 
     @Builder
-    public Conversation(Simulation simulation, Patient patient, String content, LocalDateTime send_time) {
+    private Conversation(Simulation simulation, Patient patient, String content, LocalDateTime send_time) {
         this.simulation = simulation;
         this.patient = patient;
         this.content = content;
