@@ -40,7 +40,10 @@ public class MotionDetail extends BaseTimeEntity {
         this.videoUrl = videoUrl;
     }
 
-    public static MotionDetail of(Simulation simulation, UserMotionRequest userMotionRequest, UserMotionRequest.Motion motion) {
+    public static MotionDetail of(final Simulation simulation,
+                                  final UserMotionRequest userMotionRequest,
+                                  final UserMotionRequest.Motion motion
+    ) {
         return MotionDetail.builder()
                 .simulation(simulation)
                 .motionName(motion.motionName())

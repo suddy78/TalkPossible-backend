@@ -3,11 +3,12 @@ package com.talkpossible.project.domain.dto.motion.request;
 import java.util.List;
 
 public record UserMotionRequest(
-        Long situationId,
+        Long simulationId,
         Long patientId,
-        String situationDate,
+        String runDate,
         List<Motion> motionList,
-        String videoUrl
+        String videoUrl,
+        String totalTime
 ) {
     public record Motion(
             String motionName,

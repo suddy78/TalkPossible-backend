@@ -3,6 +3,7 @@ package com.talkpossible.project.domain.domain;
 import com.talkpossible.project.domain.domain.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,5 +38,12 @@ public class Simulation extends BaseTimeEntity {
     private int wordsPerMin;
 
     private Boolean isStutter;
+
+    public void updateRunDateAndTotalTime(
+            final String runDate, final String totalTime
+    ) {
+        this.runDate = LocalDate.parse(runDate);
+        this.totalTime = Time.valueOf(totalTime);
+    }
 
 }
