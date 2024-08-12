@@ -37,7 +37,7 @@ public class Conversation extends BaseTimeEntity {
         this.simulation = simulation;
         this.patient = patient;
         this.content = content;
-        this.sendTime = send_time;
+        this.sendTime = sendTime;
     }
 
     public static Conversation create(Simulation simulation, Patient patient, String content, LocalDateTime sendTime) {

@@ -22,6 +22,7 @@ public class MotionService {
     private final SimulationRepository simulationRepository;
     private final PatientRepository patientRepository;
 
+    @Transactional
     public void saveUserMotion(UserMotionRequest userMotionRequest) {
         Simulation simulation = simulationRepository.findById(userMotionRequest.simulationId())
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 시뮬레이션 정보를 찾을 수 없습니다."));

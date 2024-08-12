@@ -4,7 +4,6 @@ import com.talkpossible.project.domain.cache.CacheService;
 import com.talkpossible.project.domain.dto.chat.request.ChatRequest;
 import com.talkpossible.project.domain.dto.chat.request.Message;
 import com.talkpossible.project.domain.dto.chat.request.UserChatRequest;
-import com.talkpossible.project.domain.chatGPT.dto.request.*;
 import com.talkpossible.project.domain.dto.chat.response.ChatResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
