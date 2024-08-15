@@ -1,14 +1,10 @@
 package com.talkpossible.project.domain.chatGPT.domain;
 
 import com.talkpossible.project.domain.chatGPT.domain.common.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.talkpossible.project.domain.login.dto.SignupRequest;
+import com.talkpossible.project.global.config.type.Role;
+import jakarta.persistence.*;
+import lombok.*;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -31,6 +27,29 @@ public class Doctor extends BaseTimeEntity {
     @Column(nullable = false)
     private String password;
 
-    private String phone_num;
+    private String phoneNum;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Builder
+    private Doctor(String name, String email, String password,
+                   String phoneNum, Role role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phoneNum = phoneNum;
+        this.role = role;
+    }
+
+    public static Doctor create(SignupRequest request, String encryptedPassword, Role role) {
+        return Doctor.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(encryptedPassword)
+                .phoneNum(request.getPhoneNum())
+                .role(role)
+                .build();
+    }
 
 }
