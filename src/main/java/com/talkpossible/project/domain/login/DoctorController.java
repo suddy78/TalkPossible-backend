@@ -1,7 +1,8 @@
 package com.talkpossible.project.domain.login;
 
+import com.talkpossible.project.domain.login.dto.LoginRequest;
+import com.talkpossible.project.domain.login.dto.LoginResponse;
 import com.talkpossible.project.domain.login.dto.SignupRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,12 @@ public class DoctorController {
     public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest){
         doctorService.signup(signupRequest);
         return ResponseEntity.ok().build();
+    }
+
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+        return ResponseEntity.ok(doctorService.login(loginRequest));
     }
 
 }
