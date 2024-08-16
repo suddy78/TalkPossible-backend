@@ -1,5 +1,6 @@
 package com.talkpossible.project.domain.login;
 
+import com.talkpossible.project.domain.chatGPT.domain.Doctor;
 import com.talkpossible.project.global.config.type.Role;
 import com.talkpossible.project.global.config.type.TokenType;
 import io.jsonwebtoken.*;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -26,17 +29,20 @@ public class JwtTokenProvider {
     private final long refreshTokenValidTime;
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final DoctorRepository doctorRepository;
 
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.access_token_valid_time}") Duration accessTokenValidTime,
             @Value("${jwt.refresh_token_valid_time}") Duration refreshTokenValidTime,
-            CustomUserDetailsService customUserDetailsService) {
+            CustomUserDetailsService customUserDetailsService,
+            DoctorRepository doctorRepository) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenValidTime = accessTokenValidTime.toMillis();
         this.refreshTokenValidTime = refreshTokenValidTime.toMillis();
         this.customUserDetailsService = customUserDetailsService;
+        this.doctorRepository = doctorRepository;
     }
 
     // access token 생성
@@ -74,6 +80,7 @@ public class JwtTokenProvider {
 
     // Request Header 에서 토큰값 추출
     public String extractToken(HttpServletRequest request) {
+
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
@@ -107,16 +114,63 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰에서 인증 정보 조회
-    public Authentication getAuthentication(String accessToken) {
+    public Authentication getAuthentication(String token) {
 
-        String email = Jwts.parserBuilder()
-                            .setSigningKey(key)
-                            .build()
-                            .parseClaimsJws(accessToken)
-                            .getBody()
-                            .get("email", String.class);
-        CustomUserDetails customUserDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(email);
+        CustomUserDetails customUserDetails =
+                (CustomUserDetails) customUserDetailsService.loadUserByUsername(getEmailFromToken(token));
+
         return new UsernamePasswordAuthenticationToken(customUserDetails, "", customUserDetails.getAuthorities());
+    }
+
+    private String getEmailFromToken(String token) {
+
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("email", String.class);
+    }
+
+    private Long getIdFromToken(String token) {
+
+        return Long.parseLong(
+                Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject());
+    }
+
+    // * 로그인이 필수인 엔드포인트에서 사용
+    // SecurityContextHolder 를 통해 doctorId를 가져옴
+    public Long getDoctorId() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            return ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+        }
+        return null;
+    }
+
+    // * 로그인이 필수가 아닌 엔드포인트에서 사용
+    // SecurityContextHolder 또는 HttpServletRequest 를 통해 doctorId를 가져옴
+    public Long getDoctorIdByServlet(HttpServletRequest request) {
+
+        // 먼저 SecurityContextHolder 에서 doctorId 확인
+        Long doctorId = getDoctorId();
+        if (doctorId != null) {
+            return doctorId;
+        }
+
+        // SecurityContextHolder 에 정보가 없을 경우, HttpServletRequest 에서 토큰 확인
+        String token = extractToken(request);
+        if (token != null && validateToken(token, TokenType.ACCESS_TOKEN)) {
+            return getIdFromToken(token);
+        }
+
+        return null;
     }
 
 }
