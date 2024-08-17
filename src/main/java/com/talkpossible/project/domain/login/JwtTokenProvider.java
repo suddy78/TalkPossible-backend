@@ -1,6 +1,5 @@
 package com.talkpossible.project.domain.login;
 
-import com.talkpossible.project.domain.chatGPT.domain.Doctor;
 import com.talkpossible.project.global.config.type.Role;
 import com.talkpossible.project.global.config.type.TokenType;
 import com.talkpossible.project.global.exception.CustomErrorCode;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -33,20 +31,21 @@ public class JwtTokenProvider {
     private final long refreshTokenValidTime;
 
     private final CustomUserDetailsService customUserDetailsService;
-    private final DoctorRepository doctorRepository;
 
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.access_token_valid_time}") Duration accessTokenValidTime,
             @Value("${jwt.refresh_token_valid_time}") Duration refreshTokenValidTime,
-            CustomUserDetailsService customUserDetailsService,
-            DoctorRepository doctorRepository) {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+            CustomUserDetailsService customUserDetailsService) {
+        this.key = createKeyFromSecret(secretKey);
         this.accessTokenValidTime = accessTokenValidTime.toMillis();
         this.refreshTokenValidTime = refreshTokenValidTime.toMillis();
         this.customUserDetailsService = customUserDetailsService;
-        this.doctorRepository = doctorRepository;
+    }
+
+    private Key createKeyFromSecret(String secretKey) {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     // access token 생성
