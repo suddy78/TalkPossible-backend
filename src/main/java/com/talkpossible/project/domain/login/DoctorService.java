@@ -5,12 +5,13 @@ import com.talkpossible.project.domain.login.dto.LoginRequest;
 import com.talkpossible.project.domain.login.dto.LoginResponse;
 import com.talkpossible.project.domain.login.dto.SignupRequest;
 import com.talkpossible.project.global.config.type.Role;
+import com.talkpossible.project.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import static com.talkpossible.project.global.exception.CustomErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +27,7 @@ public class DoctorService {
 
         // 이메일 가입 여부 확인
         doctorRepository.findByEmail(signupRequest.getEmail()).ifPresent(user -> {
-            throw new IllegalStateException("이미 가입된 이메일입니다.");
-            //throw new CustomException(EMAIL_ALREADY_EXISTS);
+            throw new CustomException(EMAIL_ALREADY_EXISTS);
         });
 
         // 비밀번호 암호화
@@ -43,18 +43,18 @@ public class DoctorService {
 
         // 이메일 조회
         Doctor doctor = doctorRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("가입되지 않은 사용자입니다."));
-                //.orElseThrow(() -> new CustomException(DOCTOR_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(DOCTOR_NOT_FOUND));
 
         // 비밀번호 확인
         if (!passwordEncoder.matches(loginRequest.getPassword(), doctor.getPassword())){
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
-            //throw new CustomException(LOGIN_FAILED);
+            throw new CustomException(PASSWORD_MISMATCH);
         }
 
         // 토큰 생성
         String accessToken = jwtTokenProvider.createAccessToken(doctor.getId(), doctor.getEmail(), doctor.getRole());
         String refreshToken = jwtTokenProvider.createRefreshToken(doctor.getId());
+
+        // TODO refresh token 업데이트
 
         return new LoginResponse(accessToken, refreshToken);
     }

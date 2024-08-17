@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -44,8 +45,13 @@ public class SecurityConfig {
                     authorize
                             .requestMatchers("/api/v1/auth/signup").permitAll()
                             .requestMatchers("/api/v1/auth/login").permitAll()
+                            .requestMatchers("/api/v1/auth/login-not-required-test").permitAll()
                             .anyRequest().authenticated();
                 })
+
+                // 인증이 필요한 엔드포인트에 인증 없이 접근할 경우 커스텀 예외 처리
+                .exceptionHandling(exceptions ->
+                        exceptions.authenticationEntryPoint(customAuthenticationEntryPoint))
 
                 // JwtAuthenticationFilter 추가
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

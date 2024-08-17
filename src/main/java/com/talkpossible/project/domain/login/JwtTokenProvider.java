@@ -3,6 +3,8 @@ package com.talkpossible.project.domain.login;
 import com.talkpossible.project.domain.chatGPT.domain.Doctor;
 import com.talkpossible.project.global.config.type.Role;
 import com.talkpossible.project.global.config.type.TokenType;
+import com.talkpossible.project.global.exception.CustomErrorCode;
+import com.talkpossible.project.global.exception.CustomException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -19,6 +21,8 @@ import org.springframework.util.StringUtils;
 import java.security.Key;
 import java.time.Duration;
 import java.util.Date;
+
+import static com.talkpossible.project.global.exception.CustomErrorCode.*;
 
 @Component
 @Slf4j
@@ -95,22 +99,28 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
-            log.warn(tokenType + ": 토큰이 만료되었습니다.", e);
+            handleTokenException(e, TOKEN_EXPIRED, "토큰이 만료되었습니다", tokenType);
         } catch (IllegalArgumentException e) {
-            log.warn(tokenType + ": 토큰이 비어있거나 잘못된 형식입니다.", e);
-//        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | UnsupportedJwtException e) {
-//            log.error(tokenType + ": 토큰이 유효하지 않습니다.", e);
+            handleTokenException(e, INVALID_TOKEN_FORMAT, "토큰이 비어있거나 잘못된 형식입니다", tokenType);
         } catch (io.jsonwebtoken.security.SecurityException e) {
-            log.error(tokenType + ": 토큰의 서명이 유효하지 않습니다.", e);
-        } catch (MalformedJwtException e){
-            log.error(tokenType + ": 토큰의 구조가 올바르지 않습니다.", e);
+            handleTokenException(e, INVALID_TOKEN, "토큰의 서명이 유효하지 않습니다", tokenType);
+        } catch (MalformedJwtException e) {
+            handleTokenException(e, INVALID_TOKEN, "토큰의 구조가 올바르지 않습니다", tokenType);
         } catch (UnsupportedJwtException e) {
-            log.error(tokenType + ": 서버에서 지원하지 않는 토큰 형식입니다.", e);
+            handleTokenException(e, INVALID_TOKEN, "서버에서 지원하지 않는 토큰 형식입니다", tokenType);
         } catch (Exception e) {
-            log.info(tokenType + ": 토큰 검증 중 오류가 발생했습니다.", e);
+            handleTokenException(e, TOKEN_VALIDATION_ERROR, "토큰 검증 중 오류가 발생했습니다", tokenType);
         }
 
         return false;
+    }
+
+    // 토큰 유효성 검증 관련 예외 처리
+    private void handleTokenException(Exception e, CustomErrorCode errorCode,
+                                      String errorMessage, TokenType tokenType) {
+        String message = String.format("%s: %s", tokenType, errorMessage);
+        log.error(message, e);
+        throw new CustomException(errorCode, message);
     }
 
     // JWT 토큰에서 인증 정보 조회

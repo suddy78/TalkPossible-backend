@@ -4,13 +4,27 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import static org.springframework.http.HttpStatus.*;
+
 @Getter
 @RequiredArgsConstructor
 public enum CustomErrorCode {
 
     // Common (1xxx)
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 1001, "서버 내부에 오류가 있습니다."),
-    INVALID_VALUE(HttpStatus.BAD_REQUEST, 1002, "잘못된 입력값입니다."),
+    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 1001, "서버 내부에 오류가 있습니다."),
+    INVALID_VALUE(BAD_REQUEST, 1002, "잘못된 입력값입니다."),
+
+    // 사용자 인증 (2xxx)
+    EMAIL_ALREADY_EXISTS(CONFLICT, 2001, "이미 가입된 이메일입니다."),
+    PASSWORD_MISMATCH(UNAUTHORIZED, 2002, "비밀번호가 일치하지 않습니다."),
+    UNAUTHORIZED_ACCESS(UNAUTHORIZED, 2003, "인증된 사용자만 접근 가능한 URL입니다."),
+    TOKEN_EXPIRED(UNAUTHORIZED, 2004, "토큰이 만료되었습니다."),
+    INVALID_TOKEN_FORMAT(BAD_REQUEST, 2005, "토큰이 비어있거나 잘못된 형식입니다."),
+    INVALID_TOKEN(UNAUTHORIZED, 2006, "토큰이 유효하지 않습니다."),
+    TOKEN_VALIDATION_ERROR(INTERNAL_SERVER_ERROR, 2007, "토큰 검증 중 오류가 발생했습니다."),
+
+    // Doctor (3xxx)
+    DOCTOR_NOT_FOUND(HttpStatus.NOT_FOUND, 3001, "해당하는 의사 정보를 찾을 수 없습니다.")
 
     ;
 

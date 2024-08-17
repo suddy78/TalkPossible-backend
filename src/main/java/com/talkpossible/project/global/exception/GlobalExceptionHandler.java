@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAllException(Exception e, HttpServletRequest request) {
         log.error("*** General Exception - url: {} ({}), errorMessage: {}",
                 request.getRequestURL(), request.getMethod(), e.getMessage());
-        return buildResponseEntity(CustomErrorCode.INTERNAL_SERVER_ERROR);
+        return buildResponseEntity(CustomErrorCode.SERVER_ERROR);
     }
 
     private ResponseEntity<ErrorResponse> buildResponseEntity(CustomErrorCode customErrorCode, String errorMessage) {
