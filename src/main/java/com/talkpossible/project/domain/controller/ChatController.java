@@ -21,8 +21,11 @@ public class ChatController {
     private final ChatStreamService chatStreamService;
 
     @PostMapping("/chatGPT/remember")
-    public ResponseEntity<ChatResponse> getquestions(@RequestBody UserChatRequest userChatRequest) {
-        return ResponseEntity.ok(chatRememberService.getGPTAnswer(userChatRequest));
+    public ResponseEntity<ChatResponse> getquestions(
+            @RequestBody UserChatRequest userChatRequest,
+            @RequestHeader long simulationId
+    ) {
+        return ResponseEntity.ok(chatRememberService.getGPTAnswer(userChatRequest, simulationId));
     }
 
     @PostMapping(value = "/chatGPT/streaming", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

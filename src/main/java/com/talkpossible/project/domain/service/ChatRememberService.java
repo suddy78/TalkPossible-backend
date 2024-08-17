@@ -1,10 +1,16 @@
 package com.talkpossible.project.domain.service;
 
 import com.talkpossible.project.domain.cache.CacheService;
+import com.talkpossible.project.domain.domain.Conversation;
+import com.talkpossible.project.domain.domain.Patient;
+import com.talkpossible.project.domain.domain.Simulation;
 import com.talkpossible.project.domain.dto.chat.request.ChatRequest;
 import com.talkpossible.project.domain.dto.chat.request.Message;
 import com.talkpossible.project.domain.dto.chat.request.UserChatRequest;
 import com.talkpossible.project.domain.dto.chat.response.ChatResponse;
+import com.talkpossible.project.domain.repository.ConversationRepository;
+import com.talkpossible.project.domain.repository.PatientRepository;
+import com.talkpossible.project.domain.repository.SimulationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +28,9 @@ import java.util.*;
 public class ChatRememberService {
 
     private final CacheService cacheService;
+    private final PatientRepository patientRepository;
+    private final SimulationRepository simulationRepository;
+    private final ConversationRepository conversationRepository;
 
     @Value("${openai.model}")
     private String model;
@@ -57,7 +66,7 @@ public class ChatRememberService {
         selectedMenu = restaurantMenuMap.get(selectedRestaurant);
     }
 
-    private HttpEntity<ChatRequest> getHttpEntity(ChatRequest chatRequest) {
+    private HttpEntity<ChatRequest> getHttpEntity(final ChatRequest chatRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         headers.set("Authorization", "Bearer " + openaiApiKey);
@@ -65,7 +74,7 @@ public class ChatRememberService {
         return new HttpEntity<>(chatRequest, headers);
     }
 
-    public ChatResponse getGPTAnswer(UserChatRequest userChatRequest) {
+    public ChatResponse getGPTAnswer(UserChatRequest userChatRequest, final long simulationId) {
 
         selectRandomRestaurantAndMenu();
 
@@ -96,10 +105,22 @@ public class ChatRememberService {
             throw new RuntimeException();
         }
 
-        history.add(new Message("system", response.getChoices().get(0).getMessage().getContent()));
+        Message GptMessage = response.getChoices().get(0).getMessage();
+
+        conversationRepository.save(Conversation.create(
+                getSimulation(simulationId), null,
+                GptMessage.getContent(), userChatRequest.sendTime()
+        ));
+
+        history.add(new Message("system", GptMessage.getContent()));
         String cacheId = cacheService.putValue(history);
         response.setCacheId(cacheId);
 
         return response;
+    }
+
+    private Simulation getSimulation(final long simulationId) {
+        return simulationRepository.findById(simulationId)
+                .orElseThrow(() -> new NoSuchElementException("시뮬레이션 정보를 찾을 수 없습니다."));
     }
 }
