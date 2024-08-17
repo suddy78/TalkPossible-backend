@@ -75,11 +75,7 @@ public class ChatRememberService {
         query1 += "\n조건은 다음과 같아.";
         query1 += "\n1.너는 서버의 역할만 해줘. 처음 온 손님에게 응대를 해주면 돼.";
         query1 += "\n2.레스토랑은 음식을 파는 음식점이야 ";
-        query1 += "\n3.답변 형식은 '서버: {진지한 질문}' 이 형식으로 적어줘";
-        query1 += "\n1. 너는 서버의 역할만 해줘. 처음 온 손님에게 응대를 해주면 돼.";
-        query1 += "\n2. 레스토랑은 " + selectedRestaurant + "이야.";
-        query1 += "\n3. 메뉴는 " + String.join(", ", selectedMenu) + "를 포함해 여러 가지가 있어.";
-        query1 += "\n4. 답변 형식은 '서버: {진지한 질문}' 이 형식으로 적어줘";
+        query1 += "\n3.답변 형식은 '{진지한 질문}' 이 형식으로 적어줘";
 
         if(userChatRequest.cacheId()!=null) {
             history = cacheService.getValue(userChatRequest.cacheId());
