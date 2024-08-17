@@ -32,14 +32,17 @@ public class Doctor extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String refreshToken;
+
     @Builder
     private Doctor(String name, String email, String password,
-                   String phoneNum, Role role) {
+                   String phoneNum, Role role, String refreshToken) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNum = phoneNum;
         this.role = role;
+        this.refreshToken = refreshToken;
     }
 
     public static Doctor create(SignupRequest request, String encryptedPassword, Role role) {
@@ -49,6 +52,7 @@ public class Doctor extends BaseTimeEntity {
                 .password(encryptedPassword)
                 .phoneNum(request.getPhoneNum())
                 .role(role)
+                .refreshToken(null)
                 .build();
     }
 
