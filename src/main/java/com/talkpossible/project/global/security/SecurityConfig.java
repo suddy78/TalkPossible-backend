@@ -52,6 +52,7 @@ public class SecurityConfig {
                 // 엔드포인트별 접근 권한 설정
                 .authorizeHttpRequests(authorize -> {
                     authorize
+                            .requestMatchers("/hello").permitAll()
                             .requestMatchers("/api/v1/auth/signup").permitAll()
                             .requestMatchers("/api/v1/auth/login").permitAll()
                             .requestMatchers("/api/v1/auth/login-not-required-test").permitAll()
