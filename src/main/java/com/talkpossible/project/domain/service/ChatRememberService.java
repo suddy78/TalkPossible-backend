@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import jakarta.annotation.PostConstruct;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -109,7 +111,7 @@ public class ChatRememberService {
 
         conversationRepository.save(Conversation.create(
                 getSimulation(simulationId), null,
-                GptMessage.getContent(), userChatRequest.sendTime()
+                GptMessage.getContent(), LocalDateTime.now()
         ));
 
         history.add(new Message("system", GptMessage.getContent()));
