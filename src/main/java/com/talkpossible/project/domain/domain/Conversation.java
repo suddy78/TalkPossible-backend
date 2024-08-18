@@ -24,7 +24,7 @@ public class Conversation extends BaseTimeEntity {
     private Simulation simulation;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "sender_id", nullable = false)
+    @JoinColumn(name = "sender_id")
     private Patient patient;
 
     @Column(name = "TEXT", nullable = false)
@@ -40,12 +40,12 @@ public class Conversation extends BaseTimeEntity {
         this.sendTime = sendTime;
     }
 
-    public static Conversation create(Simulation simulation, Patient patient, String content, LocalDateTime sendTime) {
+    public static Conversation create(Simulation simulation, Patient patient, String content, String sendTime) {
         return Conversation.builder()
                 .simulation(simulation)
                 .patient(patient)
                 .content(content)
-                .sendTime(sendTime)
+                .sendTime(LocalDateTime.parse(sendTime))
                 .build();
     }
 }
