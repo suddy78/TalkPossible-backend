@@ -29,11 +29,11 @@ public class SimulationController {
 
     @PostMapping("/simulations/{simulationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)  // 응답 본문 없으므로, 204 No Content 상태 코드 반환되면 잘 된 것!
-    public void updateSimulation(
+    public void addConversation(
             @RequestHeader("patientId") Long patientId,
             @PathVariable("simulationId") Long simulationId,
             @RequestBody UpdateSimulationRequest request
     ) {
-        simulationService.updateSimulation(patientId, simulationId, request);
+        simulationService.addConversation(patientId, simulationId, request);
     }
 }

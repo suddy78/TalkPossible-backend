@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateSimulationRequest {
-    private String voiceFileName;
     private String content;
 }

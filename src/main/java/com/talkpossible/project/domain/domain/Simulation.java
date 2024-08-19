@@ -38,15 +38,6 @@ public class Simulation extends BaseTimeEntity {
 
     private Boolean isStutter;
 
-    private String voiceFileName;
-
-    private String content;
-
-    public void updateSimulationDetails(String voiceFileName, String content) {
-        this.voiceFileName = voiceFileName;
-        this.content = content;
-    }
-
     public void updateRunDateAndTotalTime(
             final String runDate, final String totalTime
     ) {
