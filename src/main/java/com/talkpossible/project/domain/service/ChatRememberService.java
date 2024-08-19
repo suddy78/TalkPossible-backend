@@ -125,4 +125,5 @@ public class ChatRememberService {
         return simulationRepository.findById(simulationId)
                 .orElseThrow(() -> new NoSuchElementException("시뮬레이션 정보를 찾을 수 없습니다."));
     }
+
 }
