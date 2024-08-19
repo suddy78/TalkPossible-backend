@@ -3,6 +3,7 @@ package com.talkpossible.project.domain.service;
 import com.talkpossible.project.domain.domain.Patient;
 import com.talkpossible.project.domain.domain.Simulation;
 import com.talkpossible.project.domain.domain.Situation;
+import com.talkpossible.project.domain.dto.simulations.request.UpdateSimulationRequest;
 import com.talkpossible.project.domain.dto.simulations.response.UserSimulationResponse;
 import com.talkpossible.project.domain.repository.PatientRepository;
 import com.talkpossible.project.domain.repository.SimulationRepository;
@@ -38,5 +39,19 @@ public class SimulationService {
 
         // 생성된 Simulation의 ID를 담아 응답
         return new UserSimulationResponse(savedSimulation.getId());
+    }
+
+    @Transactional
+    public void updateSimulation(Long patientId, Long simulationId, UpdateSimulationRequest request) {
+        // Patient 객체를 데이터베이스에서 조회
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid patientId: " + patientId));
+
+        // Simulation 객체를 데이터베이스에서 조회
+        Simulation simulation = simulationRepository.findById(simulationId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid simulationId: " + simulationId));
+
+        // 여기서 실제로 업데이트 로직을 추가
+        simulation.updateSimulationDetails(request.getVoiceFileName(), request.getContent());
     }
 }
