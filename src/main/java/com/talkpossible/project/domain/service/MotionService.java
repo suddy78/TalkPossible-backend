@@ -33,7 +33,11 @@ public class MotionService {
         Patient patient = patientRepository.findById(userMotionRequest.patientId())
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 환자 정보를 찾을 수 없습니다."));
 
-        simulation.updateRunDateAndTotalTime(userMotionRequest.runDate(), userMotionRequest.totalTime());
+        simulation.updateRunDateAndTotalTime(
+                userMotionRequest.runDate(),
+                userMotionRequest.totalTime(),
+                userMotionRequest.videoUrl()
+        );
 
         motionDetailRepository.saveAll(motionDetails);
     }
