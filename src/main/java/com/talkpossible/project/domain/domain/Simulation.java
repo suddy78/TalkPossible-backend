@@ -38,11 +38,16 @@ public class Simulation extends BaseTimeEntity {
 
     private Boolean isStutter;
 
+    private String videoUrl;
+
     public void updateRunDateAndTotalTime(
-            final String runDate, final String totalTime
+            final String runDate,
+            final String totalTime,
+            final String videoUrl
     ) {
         this.runDate = LocalDate.parse(runDate);
         this.totalTime = Time.valueOf(totalTime);
+        this.videoUrl = videoUrl;
     }
 
 }
