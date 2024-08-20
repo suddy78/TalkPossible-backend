@@ -2,10 +2,7 @@ package com.talkpossible.project.domain.domain;
 
 import com.talkpossible.project.domain.domain.common.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Time;
 import java.time.LocalDate;
@@ -15,6 +12,8 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Simulation extends BaseTimeEntity {
 
