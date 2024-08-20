@@ -10,6 +10,8 @@ import com.talkpossible.project.domain.repository.ConversationRepository;
 import com.talkpossible.project.domain.repository.PatientRepository;
 import com.talkpossible.project.domain.repository.SimulationRepository;
 import com.talkpossible.project.domain.repository.SituationRepository;
+import com.talkpossible.project.global.exception.CustomErrorCode;
+import com.talkpossible.project.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +31,9 @@ public class SimulationService {
     public UserSimulationResponse createSimulation(Long patientId, Long situationId) {
         // Patient와 Situation 객체를 데이터베이스에서 조회
         Patient patient = patientRepository.findById(patientId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid patientId: " + patientId));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.DOCTOR_NOT_FOUND));
         Situation situation = situationRepository.findById(situationId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid situationId: " + situationId));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.INVALID_VALUE));
 
         // Simulation 객체 생성
         Simulation simulation = Simulation.builder()
@@ -50,11 +52,11 @@ public class SimulationService {
     public void addConversation(Long patientId, Long simulationId, UpdateSimulationRequest request) {
         // Patient 객체를 데이터베이스에서 조회
         Patient patient = patientRepository.findById(patientId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid patientId: " + patientId));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.DOCTOR_NOT_FOUND));
 
         // Simulation 객체를 데이터베이스에서 조회
         Simulation simulation = simulationRepository.findById(simulationId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid simulationId: " + simulationId));
+                .orElseThrow(() -> new CustomException(CustomErrorCode.INVALID_VALUE));
 
         // 새로운 Conversation 객체 생성
         Conversation conversation = Conversation.builder()
