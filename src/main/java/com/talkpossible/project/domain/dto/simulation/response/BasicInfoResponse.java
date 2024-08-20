@@ -47,7 +47,7 @@ public class BasicInfoResponse {
                 .situation(simulation.getSituation().getTitle())
                 .totalTime(formatTime(simulation.getTotalTime()))
                 .wordsPerMin(simulation.getWordsPerMin())
-                //.videoUrl(simulation.getVideoUrl)
+                .videoUrl(simulation.getVideoUrl())
                 .build();
 
         Header header = Header.builder()
