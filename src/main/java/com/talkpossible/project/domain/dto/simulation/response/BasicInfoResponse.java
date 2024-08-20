@@ -19,53 +19,56 @@ public class BasicInfoResponse {
     private Body body;
     private Header header;
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy년 M월 d일");
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("mm:ss");
-
-    @Getter
-    @Builder
-    public static class Body {
-        private String patientName;
-        private String runDate;
-        private String situation;
-        private String totalTime;
-        private Integer wordsPerMin;
-        private String videoUrl;
+    public static BasicInfoResponse from(Simulation simulation, Patient patient){
+        return BasicInfoResponse.builder()
+                .header(Header.create(patient))
+                .body(Body.create(simulation, patient))
+                .build();
     }
 
     @Getter
     @Builder
     public static class Header {
         private Long patientId;
+
+        public static Header create(Patient patient){
+            return Header.builder()
+                    .patientId(patient.getId())
+                    .build();
+        }
     }
 
-    public static BasicInfoResponse from(Simulation simulation, Patient patient){
+    @Getter
+    @Builder
+    public static class Body {
 
-        Body body = Body.builder()
-                .patientName(patient.getName())
-                .runDate(formatDate(simulation.getRunDate()))
-                .situation(simulation.getSituation().getTitle())
-                .totalTime(formatTime(simulation.getTotalTime()))
-                .wordsPerMin(simulation.getWordsPerMin())
-                .videoUrl(simulation.getVideoUrl())
-                .build();
+        private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy년 M월 d일");
+        private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("mm:ss");
 
-        Header header = Header.builder()
-                .patientId(patient.getId())
-                .build();
+        private String patientName;
+        private String runDate;
+        private String situation;
+        private String totalTime;
+        private Integer wordsPerMin;
+        private String videoUrl;
 
-        return BasicInfoResponse.builder()
-                .body(body)
-                .header(header)
-                .build();
+        public static Body create(Simulation simulation, Patient patient){
+            return Body.builder()
+                    .patientName(patient.getName())
+                    .runDate(formatDate(simulation.getRunDate()))
+                    .situation(simulation.getSituation().getTitle())
+                    .totalTime(formatTime(simulation.getTotalTime()))
+                    .wordsPerMin(simulation.getWordsPerMin())
+                    .videoUrl(simulation.getVideoUrl())
+                    .build();
+        }
+
+        private static String formatDate(LocalDate date) {
+            return date != null ? date.format(DATE_FORMATTER) : null;
+        }
+
+        private static String formatTime(Time time) {
+            return time != null ? time.toLocalTime().format(TIME_FORMATTER) : null;
+        }
     }
-
-    private static String formatDate(LocalDate date) {
-        return date != null ? date.format(DATE_FORMATTER) : null;
-    }
-
-    private static String formatTime(Time time) {
-        return time != null ? time.toLocalTime().format(TIME_FORMATTER) : null;
-    }
-
 }
