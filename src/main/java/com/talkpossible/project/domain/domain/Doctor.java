@@ -36,6 +36,8 @@ public class Doctor extends BaseTimeEntity {
 
     private String phoneNum;
 
+    private String profileImgUrl;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -43,10 +45,12 @@ public class Doctor extends BaseTimeEntity {
 
     @Builder
     private Doctor(String name, String email, String password,
-                   String phoneNum, Role role, String refreshToken) {
+                   String profileImgUrl, String phoneNum,
+                   Role role, String refreshToken) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.profileImgUrl = profileImgUrl;
         this.phoneNum = phoneNum;
         this.role = role;
         this.refreshToken = refreshToken;
@@ -57,6 +61,7 @@ public class Doctor extends BaseTimeEntity {
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(encryptedPassword)
+                //.profileImgUrl(profileImgUrl)
                 .phoneNum(request.getPhoneNum())
                 .role(role)
                 .refreshToken(null)
