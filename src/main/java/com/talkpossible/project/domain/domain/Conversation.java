@@ -40,12 +40,12 @@ public class Conversation extends BaseTimeEntity {
         this.sendTime = sendTime;
     }
 
-    public static Conversation create(Simulation simulation, Patient patient, String content, String sendTime) {
+    public static Conversation create(Simulation simulation, Patient patient, String content, LocalDateTime sendTime) {
         return Conversation.builder()
                 .simulation(simulation)
                 .patient(patient)
                 .content(content)
-                .sendTime(LocalDateTime.parse(sendTime))
+                .sendTime(sendTime)
                 .build();
     }
 }
