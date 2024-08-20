@@ -27,8 +27,6 @@ public class MotionDetail extends BaseTimeEntity {
 
     private String timestamp;
 
-    private String videoUrl;
-
     @Builder
     private MotionDetail(
             Simulation simulation, String situationDate,
@@ -37,7 +35,6 @@ public class MotionDetail extends BaseTimeEntity {
         this.simulation = simulation;
         this.motionName = motionName;
         this.timestamp = timestamp;
-        this.videoUrl = videoUrl;
     }
 
     public static MotionDetail of(final Simulation simulation,

@@ -14,6 +14,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
+
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +24,7 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -36,6 +39,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // CORS 설정
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+
                 // csrf 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
 
@@ -46,6 +52,7 @@ public class SecurityConfig {
                 // 엔드포인트별 접근 권한 설정
                 .authorizeHttpRequests(authorize -> {
                     authorize
+                            .requestMatchers("/hello").permitAll()
                             .requestMatchers("/api/v1/auth/signup").permitAll()
                             .requestMatchers("/api/v1/auth/login").permitAll()
                             .requestMatchers("/api/v1/auth/login-not-required-test").permitAll()
