@@ -1,7 +1,7 @@
 package com.talkpossible.project.domain.service;
 
 import com.talkpossible.project.domain.domain.Simulation;
-import com.talkpossible.project.domain.dto.simulation.response.BasicFeedbackResponse;
+import com.talkpossible.project.domain.dto.simulation.response.BasicInfoResponse;
 import com.talkpossible.project.domain.repository.SimulationRepository;
 import com.talkpossible.project.global.exception.CustomException;
 import com.talkpossible.project.global.security.jwt.JwtTokenProvider;
@@ -20,7 +20,7 @@ public class SimulationService {
 
 
     // 피드백 조회 - 시뮬레이션 정보 & 영상
-    public BasicFeedbackResponse getBasicFeedback(long simulationId) {
+    public BasicInfoResponse getBasicFeedback(long simulationId) {
 
         Long doctorId = jwtTokenProvider.getDoctorId();
         Simulation simulation = getSimulation(simulationId);
@@ -29,7 +29,7 @@ public class SimulationService {
             throw new CustomException(ACCESS_DENIED);
         }
 
-        return BasicFeedbackResponse.from(simulation, simulation.getPatient());
+        return BasicInfoResponse.from(simulation, simulation.getPatient());
     }
 
     private Simulation getSimulation(final long simulationId) {

@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
  */
 @Getter
 @Builder
-public class BasicFeedbackResponse {
+public class BasicInfoResponse {
 
     private Body body;
     private Header header;
@@ -39,7 +39,7 @@ public class BasicFeedbackResponse {
         private Long patientId;
     }
 
-    public static BasicFeedbackResponse from(Simulation simulation, Patient patient){
+    public static BasicInfoResponse from(Simulation simulation, Patient patient){
 
         Body body = Body.builder()
                 .patientName(patient.getName())
@@ -54,7 +54,7 @@ public class BasicFeedbackResponse {
                 .patientId(patient.getId())
                 .build();
 
-        return BasicFeedbackResponse.builder()
+        return BasicInfoResponse.builder()
                 .body(body)
                 .header(header)
                 .build();

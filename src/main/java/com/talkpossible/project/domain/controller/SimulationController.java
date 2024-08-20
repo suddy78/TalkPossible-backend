@@ -1,6 +1,6 @@
 package com.talkpossible.project.domain.controller;
 
-import com.talkpossible.project.domain.dto.simulation.response.BasicFeedbackResponse;
+import com.talkpossible.project.domain.dto.simulation.response.BasicInfoResponse;
 import com.talkpossible.project.domain.service.SimulationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ public class SimulationController {
 
     // 피드백 조회 - 시뮬레이션 정보 & 영상
     @GetMapping("/simulations/{simulationId}/info")
-    public ResponseEntity<BasicFeedbackResponse.Body> getBasicFeedback(@PathVariable long simulationId){
+    public ResponseEntity<BasicInfoResponse.Body> getBasicFeedback(@PathVariable long simulationId){
 
-        BasicFeedbackResponse response = simulationService.getBasicFeedback(simulationId);
+        BasicInfoResponse response = simulationService.getBasicFeedback(simulationId);
 
         return ResponseEntity.ok()
                 .header("patientId", String.valueOf(response.getHeader().getPatientId()))
