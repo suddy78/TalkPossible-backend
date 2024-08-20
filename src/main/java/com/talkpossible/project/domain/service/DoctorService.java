@@ -4,6 +4,7 @@ import com.talkpossible.project.domain.domain.Doctor;
 import com.talkpossible.project.domain.dto.doctor.request.LoginRequest;
 import com.talkpossible.project.domain.dto.doctor.response.LoginResponse;
 import com.talkpossible.project.domain.dto.doctor.request.SignupRequest;
+import com.talkpossible.project.domain.dto.doctor.response.ProfileResponse;
 import com.talkpossible.project.global.security.jwt.JwtTokenProvider;
 import com.talkpossible.project.domain.repository.DoctorRepository;
 import com.talkpossible.project.global.enumType.Role;
@@ -59,6 +60,15 @@ public class DoctorService {
         // TODO refresh token 업데이트
 
         return new LoginResponse(accessToken, refreshToken);
+    }
+
+    // 사용자 프로필 조회
+    public ProfileResponse getProfile() {
+
+        Doctor doctor = doctorRepository.findById(jwtTokenProvider.getDoctorId())
+                .orElseThrow(() -> new CustomException(DOCTOR_NOT_FOUND));
+
+        return ProfileResponse.from(doctor.getProfileImgUrl(), doctor.getName());
     }
 
 }
