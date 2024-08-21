@@ -18,12 +18,17 @@ else
     exit 1
 fi
 
+echo "> Target port will be ${TARGET_PORT}."
+
 # Change proxying port into target port.
-echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | tee /home/ubuntu/service_url.inc
+echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | sudo tee /home/ubuntu/service_url.inc
 
 echo "> Now Nginx proxies to ${TARGET_PORT}."
 
 # Reload nginx
-sudo service nginx reload
-
-echo "> Nginx reloaded."
+if sudo service nginx reload; then
+    echo "> Nginx reloaded successfully."
+else
+    echo "> Nginx reload failed."
+    exit 1
+fi
