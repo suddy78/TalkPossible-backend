@@ -27,7 +27,7 @@ public class Conversation extends BaseTimeEntity {
     @JoinColumn(name = "sender_id")
     private Patient patient;
 
-    @Column(name = "TEXT", nullable = false)
+    @Column(nullable = false)
     private String content;
 
     private LocalDateTime sendTime;

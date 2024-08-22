@@ -63,7 +63,6 @@ public class ChatRememberService {
 
     private void selectRandomRestaurantAndMenu() {
         List<String> restaurants = new ArrayList<>(restaurantMenuMap.keySet());
-        System.out.println(random.nextInt(restaurants.size()));
         selectedRestaurant = restaurants.get(random.nextInt(restaurants.size()));
         selectedMenu = restaurantMenuMap.get(selectedRestaurant);
     }
@@ -82,11 +81,12 @@ public class ChatRememberService {
 
         List<Message> history = new ArrayList<>();
 
+
         String query1 = "레스토랑에서 음식 주문을 하는 상황을 연습하려고 해.";
         query1 += "\n조건은 다음과 같아.";
         query1 += "\n1.너는 서버의 역할만 해줘. 처음 온 손님에게 응대를 해주면 돼.";
-        query1 += "\n2.레스토랑은 음식을 파는 음식점이야 ";
-        query1 += "\n3.답변 형식은 '{진지한 질문}' 이 형식으로 적어줘";
+        query1 += "\n2. 레스토랑은 " + selectedRestaurant + "이야.";
+        query1 += "\n3. 메뉴는 " + String.join(", ", selectedMenu) + "를 포함해 여러 가지가 있어.";
 
         if(userChatRequest.cacheId()!=null) {
             history = cacheService.getValue(userChatRequest.cacheId());
