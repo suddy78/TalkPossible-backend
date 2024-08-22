@@ -24,8 +24,10 @@ public enum CustomErrorCode {
     TOKEN_VALIDATION_ERROR(INTERNAL_SERVER_ERROR, 2007, "토큰 검증 중 오류가 발생했습니다."),
 
     // Doctor (3xxx)
-    DOCTOR_NOT_FOUND(HttpStatus.NOT_FOUND, 3001, "해당하는 의사 정보를 찾을 수 없습니다.")
+    DOCTOR_NOT_FOUND(HttpStatus.NOT_FOUND, 3001, "해당하는 의사 정보를 찾을 수 없습니다."),
 
+    // Simulation (4xxx)
+    SIMULATION_NOT_FOUND(HttpStatus.NOT_FOUND, 4001, "해당하는 시뮬레이션을 찾을 수 없습니다.")
     ;
 
     private final HttpStatus httpStatus;
