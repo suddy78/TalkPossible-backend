@@ -28,6 +28,8 @@ public class Situation {
     @Column(nullable = false)
     private String thumbnailUrl;
 
+    private String intro;
+
     @Column(nullable = false)
     private String description;
 }
