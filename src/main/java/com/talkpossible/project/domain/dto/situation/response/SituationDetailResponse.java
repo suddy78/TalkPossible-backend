@@ -10,6 +10,7 @@ public record SituationDetailResponse(
         long situationId,
         String imgUrl,
         String title,
+        String intro,
         String description
 ) {
     public static SituationDetailResponse of (final Situation situation) {
@@ -17,6 +18,7 @@ public record SituationDetailResponse(
                 .situationId(situation.getId())
                 .imgUrl(situation.getThumbnailUrl())
                 .title(situation.getTitle())
+                .intro(situation.getIntro())
                 .description(situation.getDescription())
                 .build();
     }

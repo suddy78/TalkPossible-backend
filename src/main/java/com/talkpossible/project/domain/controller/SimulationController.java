@@ -1,10 +1,11 @@
 package com.talkpossible.project.domain.controller;
 
-
+import com.talkpossible.project.domain.dto.motion.response.UserMotionListResponse;
 import com.talkpossible.project.domain.dto.simulations.request.UpdateSimulationRequest;
 import com.talkpossible.project.domain.dto.simulation.response.BasicInfoResponse;
 import com.talkpossible.project.domain.dto.simulations.response.UserSimulationResponse;
 import com.talkpossible.project.domain.service.SimulationService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,13 @@ public class SimulationController {
         return ResponseEntity.ok()
                 .header("patientId", String.valueOf(response.getHeader().getPatientId()))
                 .body(response.getBody());
+    }
+
+    // 피드백 조회 - 동작인식
+    @GetMapping("/simulations/{simulationId}/motion")
+    public ResponseEntity<UserMotionListResponse> getMotionFeedback(@PathVariable long simulationId) {
+
+        return ResponseEntity.ok(simulationService.getMotionFeedback(simulationId));
     }
 
 }
