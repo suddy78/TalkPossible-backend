@@ -55,7 +55,7 @@ public class SecurityConfig {
                             .requestMatchers("/hello").permitAll()
                             .requestMatchers("/api/v1/auth/signup").permitAll()
                             .requestMatchers("/api/v1/auth/login").permitAll()
-                            .requestMatchers("/api/v1/auth/login-not-required-test").permitAll()
+                            .requestMatchers("/api/v1/login-not-required-test").permitAll()
                             .anyRequest().authenticated();
                 })
 
