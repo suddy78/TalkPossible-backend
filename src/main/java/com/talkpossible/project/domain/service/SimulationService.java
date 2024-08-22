@@ -3,8 +3,10 @@ package com.talkpossible.project.domain.service;
 import com.talkpossible.project.domain.domain.Simulation;
 import com.talkpossible.project.domain.domain.Patient;
 import com.talkpossible.project.domain.domain.Situation;
+import com.talkpossible.project.domain.dto.motion.response.UserMotionListResponse;
 import com.talkpossible.project.domain.dto.simulation.response.BasicInfoResponse;
 import com.talkpossible.project.domain.dto.simulations.response.UserSimulationResponse;
+import com.talkpossible.project.domain.repository.MotionDetailRepository;
 import com.talkpossible.project.domain.repository.PatientRepository;
 import com.talkpossible.project.domain.repository.SimulationRepository;
 import com.talkpossible.project.domain.repository.SituationRepository;
@@ -25,6 +27,7 @@ public class SimulationService {
     private final SimulationRepository simulationRepository;
     private final PatientRepository patientRepository;
     private final SituationRepository situationRepository;
+    private final MotionDetailRepository motionDetailRepository;
 
     @Transactional
     public UserSimulationResponse createSimulation(Long patientId, Long situationId) {
@@ -58,6 +61,19 @@ public class SimulationService {
         }
 
         return BasicInfoResponse.from(simulation, simulation.getPatient());
+    }
+
+    public UserMotionListResponse getMotionFeedback(final long simulationId) {
+
+        Long doctorId = jwtTokenProvider.getDoctorId();
+        Simulation simulation = getSimulation(simulationId);
+
+        if(doctorId != simulation.getPatient().getDoctor().getId()){
+            throw new CustomException(ACCESS_DENIED);
+        }
+
+        return UserMotionListResponse.of(motionDetailRepository.findAllBySimulationId(simulationId));
+
     }
 
     private Simulation getSimulation(final long simulationId) {
