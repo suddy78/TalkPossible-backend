@@ -1,4 +1,4 @@
-package com.talkpossible.project.domain.dto.simulations.response;
+package com.talkpossible.project.domain.dto.simulation.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

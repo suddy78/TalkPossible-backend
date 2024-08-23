@@ -1,9 +1,11 @@
 package com.talkpossible.project.domain.controller;
 
 import com.talkpossible.project.domain.dto.motion.response.UserMotionListResponse;
-import com.talkpossible.project.domain.dto.simulations.request.UpdateSimulationRequest;
+import com.talkpossible.project.domain.dto.simulation.request.UpdateSimulationRequest;
 import com.talkpossible.project.domain.dto.simulation.response.BasicInfoResponse;
-import com.talkpossible.project.domain.dto.simulations.response.UserSimulationResponse;
+import com.talkpossible.project.domain.dto.simulation.response.PatientSimulationDetailResponse;
+import com.talkpossible.project.domain.dto.simulation.response.PatientSimulationListResponse;
+import com.talkpossible.project.domain.dto.simulation.response.UserSimulationResponse;
 import com.talkpossible.project.domain.service.SimulationService;
 
 import lombok.RequiredArgsConstructor;
@@ -46,7 +48,7 @@ public class SimulationController {
     
     // 피드백 조회 - 시뮬레이션 정보 & 영상
     @GetMapping("/simulations/{simulationId}/info")
-    public ResponseEntity<BasicInfoResponse.Body> getBasicFeedback(@PathVariable long simulationId){
+    public ResponseEntity<BasicInfoResponse.Body> getBasicFeedback(@PathVariable long simulationId) {
 
         BasicInfoResponse response = simulationService.getBasicFeedback(simulationId);
 
@@ -61,5 +63,13 @@ public class SimulationController {
 
         return ResponseEntity.ok(simulationService.getMotionFeedback(simulationId));
     }
+
+    // 환자별 시뮬레이션 정보 조회
+    @GetMapping("/simulations/{patientId}")
+    public ResponseEntity<PatientSimulationListResponse> getPatientSimulationInfo(@PathVariable long patientId) {
+
+        return ResponseEntity.ok(simulationService.getPatientSimulationInfo(patientId));
+    }
+
 
 }
