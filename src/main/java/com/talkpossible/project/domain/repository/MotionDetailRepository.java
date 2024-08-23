@@ -8,4 +8,7 @@ import java.util.List;
 public interface MotionDetailRepository extends JpaRepository<MotionDetail, Long> {
 
     List<MotionDetail> findAllBySimulationId(long simulationId);
+
+    long countBySimulationId(long simulationId);
+
 }
