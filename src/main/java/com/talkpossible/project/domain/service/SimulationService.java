@@ -89,7 +89,10 @@ public class SimulationService {
             throw new CustomException(ACCESS_DENIED);
         }
 
-        return BasicInfoResponse.from(simulation, simulation.getPatient());
+        // 동작 감지 횟수 조회
+        long motionCount = motionDetailRepository.countBySimulationId(simulationId);
+
+        return BasicInfoResponse.from(simulation, simulation.getPatient(), motionCount);
     }
 
     public UserMotionListResponse getMotionFeedback(final long simulationId) {
