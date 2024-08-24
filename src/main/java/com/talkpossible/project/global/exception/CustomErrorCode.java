@@ -28,8 +28,10 @@ public enum CustomErrorCode {
     DOCTOR_NOT_FOUND(NOT_FOUND, 3001, "해당하는 의사 정보를 찾을 수 없습니다."),
 
     // Simulation (4xxx)
-    SIMULATION_NOT_FOUND(NOT_FOUND, 4001, "해당하는 시뮬레이션 정보를 찾을 수 없습니다.")
-    ;
+    SIMULATION_NOT_FOUND(NOT_FOUND, 4001, "해당하는 시뮬레이션 정보를 찾을 수 없습니다."),
+
+    // Patient(5xxx)
+    PATIENT_NOT_FOUND(NOT_FOUND, 5001, "해당하는 환자 정보를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final int code;
