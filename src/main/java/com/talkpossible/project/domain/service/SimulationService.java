@@ -6,13 +6,11 @@ import com.talkpossible.project.domain.domain.Simulation;
 import com.talkpossible.project.domain.domain.Situation;
 import com.talkpossible.project.domain.dto.motion.response.UserMotionListResponse;
 import com.talkpossible.project.domain.dto.simulation.response.BasicInfoResponse;
-import com.talkpossible.project.domain.dto.simulations.response.UserSimulationResponse;
-import com.talkpossible.project.domain.repository.MotionDetailRepository;
-import com.talkpossible.project.domain.dto.simulations.request.UpdateSimulationRequest;
-import com.talkpossible.project.domain.repository.ConversationRepository;
-import com.talkpossible.project.domain.repository.PatientRepository;
-import com.talkpossible.project.domain.repository.SimulationRepository;
-import com.talkpossible.project.domain.repository.SituationRepository;
+import com.talkpossible.project.domain.dto.simulation.response.PatientSimulationDetailResponse;
+import com.talkpossible.project.domain.dto.simulation.response.PatientSimulationListResponse;
+import com.talkpossible.project.domain.dto.simulation.response.UserSimulationResponse;
+import com.talkpossible.project.domain.repository.*;
+import com.talkpossible.project.domain.dto.simulation.request.UpdateSimulationRequest;
 import com.talkpossible.project.global.exception.CustomErrorCode;
 import com.talkpossible.project.global.exception.CustomException;
 import com.talkpossible.project.global.security.jwt.JwtTokenProvider;
@@ -20,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
-import static com.talkpossible.project.global.exception.CustomErrorCode.ACCESS_DENIED;
-import static com.talkpossible.project.global.exception.CustomErrorCode.SIMULATION_NOT_FOUND;
+import static com.talkpossible.project.global.exception.CustomErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +32,7 @@ public class SimulationService {
     private final SituationRepository situationRepository;
     private final MotionDetailRepository motionDetailRepository;
     private final ConversationRepository conversationRepository;
+    private final StutterDetailRepository stutterDetailRepository;
 
 
     @Transactional
@@ -95,6 +94,7 @@ public class SimulationService {
         return BasicInfoResponse.from(simulation, simulation.getPatient(), motionCount);
     }
 
+    @Transactional(readOnly = true)
     public UserMotionListResponse getMotionFeedback(final long simulationId) {
 
         Long doctorId = jwtTokenProvider.getDoctorId();
@@ -108,9 +108,32 @@ public class SimulationService {
 
     }
 
+    @Transactional(readOnly = true)
+    public PatientSimulationListResponse getPatientSimulationInfo(final long patientId) {
+
+        List<Simulation> patientSimulations = simulationRepository.findAllByPatientId(patientId);
+
+        List<PatientSimulationDetailResponse> patientSimulationDetailResponses = patientSimulations.stream()
+                .map(simulation ->
+                        PatientSimulationDetailResponse.of(
+                                simulation,
+                                stutterDetailRepository.findBySimulation(simulation).size(),
+                                motionDetailRepository.findAllBySimulation(simulation).size()
+                        )
+                ).toList();
+
+        return PatientSimulationListResponse.of(getPatient(patientId).getName(), patientSimulationDetailResponses);
+
+    }
+
     private Simulation getSimulation(final long simulationId) {
         return simulationRepository.findById(simulationId)
                 .orElseThrow(() -> new CustomException(SIMULATION_NOT_FOUND));
+    }
+
+    private Patient getPatient(final long patientId) {
+        return patientRepository.findById(patientId)
+                .orElseThrow(() -> new CustomException(PATIENT_NOT_FOUND));
     }
 
 }
