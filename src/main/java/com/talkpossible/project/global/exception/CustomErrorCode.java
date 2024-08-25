@@ -23,6 +23,7 @@ public enum CustomErrorCode {
     INVALID_TOKEN(UNAUTHORIZED, 2006, "토큰이 유효하지 않습니다."),
     TOKEN_VALIDATION_ERROR(INTERNAL_SERVER_ERROR, 2007, "토큰 검증 중 오류가 발생했습니다."),
     ACCESS_DENIED(FORBIDDEN, 2008, "접근 권한이 없습니다."),
+    AUTHENTICATION_NOT_FOUND(UNAUTHORIZED, 2009, "인증 정보를 찾을 수 없습니다."),
 
     // Doctor (3xxx)
     DOCTOR_NOT_FOUND(NOT_FOUND, 3001, "해당하는 의사 정보를 찾을 수 없습니다."),
