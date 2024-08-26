@@ -9,21 +9,31 @@ import com.talkpossible.project.domain.dto.simulation.response.BasicInfoResponse
 import com.talkpossible.project.domain.dto.simulation.response.PatientSimulationDetailResponse;
 import com.talkpossible.project.domain.dto.simulation.response.PatientSimulationListResponse;
 import com.talkpossible.project.domain.dto.simulation.response.UserSimulationResponse;
+import com.talkpossible.project.domain.dto.speechrate.request.SpeechRateRequest;
 import com.talkpossible.project.domain.repository.*;
 import com.talkpossible.project.domain.dto.simulation.request.UpdateSimulationRequest;
 import com.talkpossible.project.global.exception.CustomErrorCode;
 import com.talkpossible.project.global.exception.CustomException;
 import com.talkpossible.project.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.talkpossible.project.global.exception.CustomErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SimulationService {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -33,6 +43,8 @@ public class SimulationService {
     private final MotionDetailRepository motionDetailRepository;
     private final ConversationRepository conversationRepository;
     private final StutterDetailRepository stutterDetailRepository;
+
+    private final WebClient webClient;
 
 
     @Transactional
@@ -134,6 +146,43 @@ public class SimulationService {
     private Patient getPatient(final long patientId) {
         return patientRepository.findById(patientId)
                 .orElseThrow(() -> new CustomException(PATIENT_NOT_FOUND));
+    }
+
+    // 발화속도 저장
+    public void saveSpeechRate(long simulationId, SpeechRateRequest speechRateRequest) {
+
+        // 권한 확인
+        Long doctorId = jwtTokenProvider.getDoctorId();
+        Simulation simulation = getSimulation(simulationId);
+        if(doctorId != simulation.getPatient().getDoctor().getId()) {
+            throw new CustomException(ACCESS_DENIED);
+        }
+
+        // 발화속도 측정 요청
+        Map<String, List<String>> requestBody = new HashMap<>();
+        requestBody.put("file_names", speechRateRequest.getAudioFileNameList());
+
+        float wordsPerMin = webClient.post()
+                .uri("/speed_model")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
+                .retrieve()
+
+                // 예외 처리
+                .onStatus(status -> status.is4xxClientError(), response -> {
+                    return Mono.error(new CustomException(SPEECH_RATE_CLIENT_ERROR));
+                })
+                .onStatus(status -> status.is5xxServerError(), response -> {
+                    return Mono.error(new CustomException(SPEECH_RATE_SERVER_ERROR));
+                })
+
+                // 정상 응답된 경우
+                .bodyToMono(Float.class)
+                .block();
+        log.info("*** 발화속도 측정 결과: {}", wordsPerMin); // EX) 88.79
+
+        // TODO 응답값 저장 (Float이 반환되므로 Simulation 엔티티 wordsPerMin 필드 타입 변경 필요!)
+
     }
 
 }

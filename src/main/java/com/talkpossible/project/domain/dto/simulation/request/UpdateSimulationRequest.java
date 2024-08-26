@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateSimulationRequest {
     private String content;
+    private String vName;
 }

@@ -31,8 +31,14 @@ public enum CustomErrorCode {
     // Simulation (4xxx)
     SIMULATION_NOT_FOUND(NOT_FOUND, 4001, "해당하는 시뮬레이션 정보를 찾을 수 없습니다."),
 
-    // Patient(5xxx)
-    PATIENT_NOT_FOUND(NOT_FOUND, 5001, "해당하는 환자 정보를 찾을 수 없습니다.");
+    // Patient (5xxx)
+    PATIENT_NOT_FOUND(NOT_FOUND, 5001, "해당하는 환자 정보를 찾을 수 없습니다."),
+
+    // Voice Analysis (6xxx)
+    STUTTER_CLIENT_ERROR(BAD_REQUEST, 6001, "말더듬 분석 중 오류가 발생했습니다. (Client Error)"),
+    STUTTER_SERVER_ERROR(INTERNAL_SERVER_ERROR, 6002, "말더듬 분석 중 오류가 발생했습니다. (Server Error)"),
+    SPEECH_RATE_CLIENT_ERROR(BAD_REQUEST, 6003, "발화속도 측정 중 오류가 발생했습니다. (Client Error)"),
+    SPEECH_RATE_SERVER_ERROR(INTERNAL_SERVER_ERROR, 6004, "발화속도 측정 중 오류가 발생했습니다. (Server Error)");
 
     private final HttpStatus httpStatus;
     private final int code;
