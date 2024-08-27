@@ -6,8 +6,10 @@ import com.talkpossible.project.domain.dto.simulation.response.BasicInfoResponse
 import com.talkpossible.project.domain.dto.simulation.response.PatientSimulationDetailResponse;
 import com.talkpossible.project.domain.dto.simulation.response.PatientSimulationListResponse;
 import com.talkpossible.project.domain.dto.simulation.response.UserSimulationResponse;
+import com.talkpossible.project.domain.dto.speechrate.request.SpeechRateRequest;
 import com.talkpossible.project.domain.service.SimulationService;
 
+import com.talkpossible.project.domain.service.StutterDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class SimulationController {
 
     private final SimulationService simulationService;
+    private final StutterDetailService stutterDetailService;
 
     // 시뮬레이션 생성
     @PostMapping("/simulations")
@@ -40,6 +43,9 @@ public class SimulationController {
             @RequestBody UpdateSimulationRequest request
     ) {
         simulationService.addConversation(patientId, simulationId, request);
+
+        // 말더듬 분석
+        stutterDetailService.saveStutterDetail(simulationId, request.getVName());
 
         // 200 OK 상태 코드를 반환
         return ResponseEntity.ok().build();
@@ -71,5 +77,13 @@ public class SimulationController {
         return ResponseEntity.ok(simulationService.getPatientSimulationInfo(patientId));
     }
 
+    // 시뮬레이션 종료 후, 발화 속도 측정
+    @PostMapping("/simulations/{simulationId}/speech-rate")
+    public ResponseEntity<Void> addSpeechRate(@PathVariable long simulationId, @RequestBody SpeechRateRequest speechRateRequest) {
+
+        simulationService.saveSpeechRate(simulationId, speechRateRequest);
+
+        return ResponseEntity.ok().build();
+    }
 
 }
