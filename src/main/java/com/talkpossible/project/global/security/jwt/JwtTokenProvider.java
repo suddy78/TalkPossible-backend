@@ -162,7 +162,7 @@ public class JwtTokenProvider {
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
             return ((CustomUserDetails) authentication.getPrincipal()).getUserId();
         }
-        return null;
+        throw new CustomException(AUTHENTICATION_NOT_FOUND);
     }
 
     // * 로그인이 필수가 아닌 엔드포인트에서 사용

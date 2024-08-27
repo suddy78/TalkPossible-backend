@@ -1,8 +1,10 @@
 package com.talkpossible.project.domain.domain;
 
 import com.talkpossible.project.domain.domain.common.BaseTimeEntity;
+import com.talkpossible.project.domain.dto.stutter.response.StutterDetailResponse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +32,23 @@ public class StutterDetail extends BaseTimeEntity {
     private String audioUrl;
 
     @Column(nullable = false)
-    private String words;
+    private String words; // 말 더듬은 어절
+
+    @Builder
+    private StutterDetail (Simulation simulation,
+                           String imageUrl, String audioUrl, String words) {
+        this.simulation = simulation;
+        this.imageUrl = imageUrl;
+        this.audioUrl = audioUrl;
+        this.words = words;
+    }
+
+    public static StutterDetail create(Simulation simulation, StutterDetailResponse detailResponse) {
+        return StutterDetail.builder()
+                .imageUrl(detailResponse.getImageUrl())
+                .audioUrl(detailResponse.getAudioUrl())
+                .words(detailResponse.getWords())
+                .build();
+    }
 
 }

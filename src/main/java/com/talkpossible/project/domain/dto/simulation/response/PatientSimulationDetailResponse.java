@@ -13,7 +13,7 @@ public record PatientSimulationDetailResponse(
         String date,
         String situation,
         String totalTime,
-        int wordsPerMin,
+        float wordsPerMin,
         int stutterCount,
         int motionCount
 ) {

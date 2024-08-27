@@ -49,7 +49,7 @@ public class BasicInfoResponse {
         private String runDate;
         private String situation;
         private String totalTime;
-        private Integer wordsPerMin;
+        private float wordsPerMin;
         private String videoUrl;
         private int motionCount;
 
