@@ -34,7 +34,7 @@ public class Simulation extends BaseTimeEntity {
 
     private Time totalTime;
 
-    private int wordsPerMin;
+    private float wordsPerMin;
 
     private Boolean isStutter;
 
@@ -48,6 +48,10 @@ public class Simulation extends BaseTimeEntity {
         this.runDate = LocalDate.parse(runDate);
         this.totalTime = Time.valueOf(totalTime);
         this.videoUrl = videoUrl;
+    }
+
+    public void updateWordsPerMin(float wordsPerMin) {
+        this.wordsPerMin = wordsPerMin;
     }
 
 }
