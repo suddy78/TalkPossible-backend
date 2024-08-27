@@ -34,6 +34,7 @@ import static com.talkpossible.project.global.exception.CustomErrorCode.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class SimulationService {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -106,7 +107,6 @@ public class SimulationService {
         return BasicInfoResponse.from(simulation, simulation.getPatient(), motionCount);
     }
 
-    @Transactional(readOnly = true)
     public UserMotionListResponse getMotionFeedback(final long simulationId) {
 
         Long doctorId = jwtTokenProvider.getDoctorId();
@@ -120,7 +120,6 @@ public class SimulationService {
 
     }
 
-    @Transactional(readOnly = true)
     public PatientSimulationListResponse getPatientSimulationInfo(final long patientId) {
 
         List<Simulation> patientSimulations = simulationRepository.findAllByPatientId(patientId);
@@ -148,6 +147,7 @@ public class SimulationService {
                 .orElseThrow(() -> new CustomException(PATIENT_NOT_FOUND));
     }
 
+    @Transactional
     // 발화속도 저장
     public void saveSpeechRate(long simulationId, SpeechRateRequest speechRateRequest) {
 
@@ -181,7 +181,7 @@ public class SimulationService {
                 .block();
         log.info("*** 발화속도 측정 결과: {}", wordsPerMin); // EX) 88.79
 
-        // TODO 응답값 저장 (Float이 반환되므로 Simulation 엔티티 wordsPerMin 필드 타입 변경 필요!)
+        simulation.updateWordsPerMin(wordsPerMin);
 
     }
 
