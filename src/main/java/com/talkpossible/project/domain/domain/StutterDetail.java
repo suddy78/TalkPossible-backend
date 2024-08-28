@@ -45,6 +45,7 @@ public class StutterDetail extends BaseTimeEntity {
 
     public static StutterDetail create(Simulation simulation, StutterDetailResponse detailResponse) {
         return StutterDetail.builder()
+                .simulation(simulation)
                 .imageUrl(detailResponse.getImageUrl())
                 .audioUrl(detailResponse.getAudioUrl())
                 .words(detailResponse.getWords())

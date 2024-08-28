@@ -3,6 +3,7 @@ package com.talkpossible.project.domain.service;
 import com.talkpossible.project.domain.domain.Simulation;
 import com.talkpossible.project.domain.domain.StutterDetail;
 import com.talkpossible.project.domain.dto.simulation.request.UpdateSimulationRequest;
+import com.talkpossible.project.domain.dto.stutter.response.StutterDetailListResponse;
 import com.talkpossible.project.domain.dto.stutter.response.StutterDetailResponse;
 import com.talkpossible.project.domain.repository.SimulationRepository;
 import com.talkpossible.project.domain.repository.StutterDetailRepository;
@@ -11,6 +12,7 @@ import com.talkpossible.project.global.exception.CustomException;
 import com.talkpossible.project.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -75,31 +78,30 @@ public class StutterDetailService {
         }
 
         // 말더듬 분석 요청 및 말더듬 결과 저장
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("audio_name", audioFileName);
+
         webClient.post()
                 .uri("/stutter_model")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Collections.singletonMap("audio_name", audioFileName))
-                .retrieve()
-
-                // 말더듬 분석 결과가 없는 경우: 상태코드 204
-                .onStatus(status -> status.equals(HttpStatus.NO_CONTENT), response -> {
-                    log.info("말더듬 분석 결과 없음! status code: {}", response.statusCode().value());
-                    return Mono.empty();
+                .bodyValue(requestBody)
+                .exchangeToMono(response -> {
+                    if (response.statusCode().equals(HttpStatus.NO_CONTENT)) { // 204
+                        log.info("말더듬 분석 결과 없음!");
+                        return Mono.empty();
+                    } else if (response.statusCode() == HttpStatus.OK) {
+                        return response.bodyToMono(StutterDetailListResponse.class)
+                                .map(StutterDetailListResponse::toStutterDetailResponse)
+                                .doOnNext(responseBody -> {
+                                    stutterDetailRepository.save(StutterDetail.create(simulation, responseBody));
+                                });
+                    } else if (response.statusCode().is4xxClientError()) {
+                        return Mono.error(new CustomException(STUTTER_CLIENT_ERROR));
+                    } else {
+                        return Mono.error(new CustomException(STUTTER_SERVER_ERROR));
+                    }
                 })
-
-                // 예외 처리
-                .onStatus(status -> status.is4xxClientError(), response -> {
-                    return Mono.error(new CustomException(STUTTER_CLIENT_ERROR));
-                })
-                .onStatus(status -> status.is5xxServerError(), response -> {
-                    return Mono.error(new CustomException(STUTTER_SERVER_ERROR));
-                })
-
-                // 말더듬 분석 결과가 있는 경우
-                .bodyToMono(StutterDetailResponse.class)
-                .doOnNext(response -> {
-                    stutterDetailRepository.save(StutterDetail.create(simulation, response));
-                });
+                .block();
 
     }
 
