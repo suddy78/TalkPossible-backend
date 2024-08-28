@@ -79,16 +79,6 @@ public class SimulationService {
         Simulation simulation = simulationRepository.findById(simulationId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.INVALID_VALUE));
 
-        // 새로운 Conversation 객체 생성
-        Conversation conversation = Conversation.builder()
-                .simulation(simulation)
-                .patient(patient)
-                .content(request.getContent())
-                .sendTime(LocalDateTime.now()) // 현재 시간을 보내는 시간으로 설정
-                .build();
-
-        // Conversation 객체를 데이터베이스에 저장
-        conversationRepository.save(conversation);
     }
   
     // 피드백 조회 - 시뮬레이션 정보 & 영상

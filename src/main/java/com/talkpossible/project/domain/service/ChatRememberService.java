@@ -118,6 +118,19 @@ public class ChatRememberService {
         String cacheId = cacheService.putValue(history);
         response.setCacheId(cacheId);
 
+        Simulation simulation = getSimulation(simulationId);
+
+        // 새로운 Conversation 객체 생성
+        Conversation conversation = Conversation.builder()
+                .simulation(simulation)
+                .patient(simulation.getPatient())
+                .content(userChatRequest.message())
+                .sendTime(LocalDateTime.now()) // 현재 시간을 보내는 시간으로 설정
+                .build();
+
+        // Conversation 객체를 데이터베이스에 저장
+        conversationRepository.save(conversation);
+
         return response;
     }
 
