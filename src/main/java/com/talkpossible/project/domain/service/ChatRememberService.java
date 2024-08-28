@@ -109,27 +109,29 @@ public class ChatRememberService {
 
         Message GptMessage = response.getChoices().get(0).getMessage();
 
+        // 새로운 Conversation 객체 생성
+        Simulation simulation = getSimulation(simulationId);
+
+        if(userChatRequest.message() != null && !userChatRequest.message().isEmpty()) {
+            Conversation conversation = Conversation.builder()
+                    .simulation(simulation)
+                    .patient(simulation.getPatient())
+                    .content(userChatRequest.message())
+                    .sendTime(LocalDateTime.now()) // 현재 시간을 보내는 시간으로 설정
+                    .build();
+
+            conversationRepository.save(conversation);
+        }
+
+        // gpt 대화내용 데이터베이스에 저장
         conversationRepository.save(Conversation.create(
-                getSimulation(simulationId), null,
+                simulation, null,
                 GptMessage.getContent(), LocalDateTime.now()
         ));
 
         history.add(new Message("system", GptMessage.getContent()));
         String cacheId = cacheService.putValue(history);
         response.setCacheId(cacheId);
-
-        Simulation simulation = getSimulation(simulationId);
-
-        // 새로운 Conversation 객체 생성
-        Conversation conversation = Conversation.builder()
-                .simulation(simulation)
-                .patient(simulation.getPatient())
-                .content(userChatRequest.message())
-                .sendTime(LocalDateTime.now()) // 현재 시간을 보내는 시간으로 설정
-                .build();
-
-        // Conversation 객체를 데이터베이스에 저장
-        conversationRepository.save(conversation);
 
         return response;
     }
