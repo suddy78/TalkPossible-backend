@@ -42,7 +42,7 @@ public class SimulationController {
             @PathVariable("simulationId") Long simulationId,
             @RequestBody UpdateSimulationRequest request
     ) {
-        simulationService.addConversation(patientId, simulationId, request);
+        //simulationService.addConversation(patientId, simulationId, request);
 
         // 말더듬 분석
         stutterDetailService.saveStutterDetail(simulationId, request.getVName());

@@ -31,11 +31,11 @@ public class StutterDetailListResponse {
 
     // StutterDetailResponse 객체로 변환
     public StutterDetailResponse toStutterDetailResponse() {
-        return new StutterDetailResponse(
-                getFirstImageUrl(),
-                getFirstAudioUrl(),
-                getFirstWords()
-        );
+        return StutterDetailResponse.builder()
+                .imageUrl(getFirstImageUrl())
+                .audioUrl(getFirstAudioUrl())
+                .word(getFirstWords())
+                .build();
     }
 
 }

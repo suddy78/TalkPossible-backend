@@ -54,9 +54,9 @@ public class StutterDetailService {
         // StutterDetailResponse로 변환하여 반환
         return stutterDetails.stream()
                 .map(stutterDetail -> new StutterDetailResponse(
+                        stutterDetail.getImageUrl(),
                         stutterDetail.getAudioUrl(),
-                        stutterDetail.getWords(),
-                        stutterDetail.getImageUrl()
+                        stutterDetail.getWords()
                 ))
                 .collect(Collectors.toList());
     }
