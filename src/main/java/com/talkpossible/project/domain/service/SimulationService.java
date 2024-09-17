@@ -143,7 +143,11 @@ public class SimulationService {
 
         // 권한 확인
         Long doctorId = jwtTokenProvider.getDoctorId();
-        Simulation simulation = getSimulation(simulationId);
+
+        //Simulation simulation = getSimulation(simulationId);
+        Simulation simulation = simulationRepository.findByIdWithLock(simulationId)
+                .orElseThrow(() -> new CustomException(SIMULATION_NOT_FOUND));
+
         if(doctorId != simulation.getPatient().getDoctor().getId()) {
             throw new CustomException(ACCESS_DENIED);
         }
