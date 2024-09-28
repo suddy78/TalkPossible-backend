@@ -75,23 +75,41 @@ public class ChatRememberService {
         return new HttpEntity<>(chatRequest, headers);
     }
 
-    public ChatResponse getGPTAnswer(UserChatRequest userChatRequest, final long simulationId) {
+    public ChatResponse getGPTAnswerAboutRestaurant(final UserChatRequest userChatRequest, final long simulationId) {
 
         selectRandomRestaurantAndMenu();
 
-        List<Message> history = new ArrayList<>();
-
-
         String query1 = "레스토랑에서 음식 주문을 하는 상황을 연습하려고 해.";
         query1 += "\n조건은 다음과 같아.";
-        query1 += "\n1.너는 서버의 역할만 해줘. 처음 온 손님에게 응대를 해주면 돼.";
+        query1 += "\n1.너는 점원의 역할만 해줘. 처음 온 손님에게 응대를 해주면 돼.";
         query1 += "\n2. 레스토랑은 " + selectedRestaurant + "이야.";
         query1 += "\n3. 메뉴는 " + String.join(", ", selectedMenu) + "를 포함해 여러 가지가 있어.";
+        query1 += "\n4.무조건 응대는 존댓말로 해줘, 최대한 상냥하게.";
+
+        return callGPT(userChatRequest, query1, simulationId);
+
+    }
+
+    public ChatResponse getGPTAnswerAboutLibrary(final UserChatRequest userChatRequest, final long simulationId) {
+
+        String query1 = "도서관에서 책을 찾거나 책을 구매하려는 상황을 연습하려고 해.";
+        query1 += "\n조건은 다음과 같아.";
+        query1 += "\n1.너는 사서의 역할만 해줘. 책을 찾아 달라는 고객이라면 책을 찾아주면 돼.";
+        query1 += "\n2.책을 구매하려는 고객이라면 책을 찾지말고 바로 결제를 해주면 돼.";
+        query1 += "\n3.손님이 대화를 끝내기 전까지는 무조건 말의 마지막에, 상황에 맞는 질문을 고객에게 해줘, 예를 들어 '봉투 필요하신가요?', '영수증 드릴까요?'";
+        query1 += "\n4.손님과의 대화는 최소 4번이상 해줘";
+        query1 += "\n5.무조건 응대는 존댓말로 해줘, 최대한 상냥하게.";
+
+        return callGPT(userChatRequest, query1, simulationId);
+    }
+
+    private ChatResponse callGPT(UserChatRequest userChatRequest, String query, Long simulationId) {
+        List<Message> history = new ArrayList<>();
 
         if(userChatRequest.cacheId()!=null) {
             history = cacheService.getValue(userChatRequest.cacheId());
         } else {
-            history.add(new Message("system", query1));
+            history.add(new Message("system", query));
         }
 
         history.add(new Message("user", userChatRequest.message()));
