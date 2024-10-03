@@ -2,10 +2,15 @@ package com.talkpossible.project.domain.domain;
 
 
 import com.talkpossible.project.domain.domain.common.BaseTimeEntity;
+import com.talkpossible.project.domain.dto.doctor.request.SignupRequest;
+import com.talkpossible.project.domain.dto.patient.request.PostPatient;
+import com.talkpossible.project.global.enumType.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDate;
 
@@ -34,6 +39,24 @@ public class Patient extends BaseTimeEntity {
     private String phoneNum;
 
     @Column(nullable = false)
-    private Boolean gender;
+    private boolean gender;
 
+    @Builder
+    private Patient(Doctor doctor, String name, LocalDate birthday, String phoneNum, boolean gender) {
+        this.doctor = doctor;
+        this.name = name;
+        this.birthday = birthday;
+        this.phoneNum = phoneNum;
+        this.gender = gender;
+    }
+
+    public static Patient create(Doctor doctor, PostPatient postPatient) {
+        return Patient.builder()
+                .doctor(doctor)
+                .name(postPatient.name())
+                .birthday(LocalDate.parse(postPatient.birthday()))
+                .phoneNum(postPatient.phoneNum())
+                .gender(postPatient.gender())
+                .build();
+    }
 }
