@@ -35,11 +35,15 @@ fi
 OLD_PID=$(lsof -t -i TCP:${CURRENT_PORT})
 
 if [ -n "${OLD_PID}" ]; then
-    echo "> Killing process running on port ${CURRENT_PORT} (PID: ${OLD_PID})"
+    echo "> Trying to kill process running on port ${CURRENT_PORT} (PID: ${OLD_PID})"
+    
     sudo kill ${OLD_PID}
-    echo "> Process on port ${CURRENT_PORT} has been terminated."
+    sleep 5
+
+    if lsof -i TCP:${CURRENT_PORT} > /dev/null; then
+        echo "> Process on port ${CURRENT_PORT} is still running."
+    else
+        echo "> Process on port ${CURRENT_PORT} has been successfully terminated."
 else
     echo "> No process found on port ${CURRENT_PORT}."
 fi
-
-echo "> Successfully switched Nginx proxy to ${TARGET_PORT} and terminated old application on port ${CURRENT_PORT}."
