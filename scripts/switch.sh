@@ -44,6 +44,7 @@ if [ -n "${OLD_PID}" ]; then
         echo "> Process on port ${CURRENT_PORT} is still running."
     else
         echo "> Process on port ${CURRENT_PORT} has been successfully terminated."
+    fi
 else
     echo "> No process found on port ${CURRENT_PORT}."
 fi
