@@ -105,7 +105,7 @@ public class SimulationService {
             throw new CustomException(ACCESS_DENIED);
         }
 
-        return UserMotionListResponse.of(motionDetailRepository.findAllBySimulationId(simulationId));
+        return UserMotionListResponse.of(motionDetailRepository.findAllBySimulationIdOrderByTimestampAsc(simulationId));
 
     }
 
