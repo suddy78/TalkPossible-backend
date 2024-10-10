@@ -91,10 +91,19 @@ public class StutterDetailService {
                         return Mono.empty();
                     } else if (response.statusCode() == HttpStatus.OK) {
                         return response.bodyToMono(StutterDetailListResponse.class)
-                                .map(StutterDetailListResponse::toStutterDetailResponse)
-                                .doOnNext(responseBody -> {
-                                    stutterDetailRepository.save(StutterDetail.create(simulation, responseBody));
-                                });
+                                .filter(responseBody -> responseBody != null &&
+                                        responseBody.getSentenceList() != null &&
+                                        !responseBody.getSentenceList().isEmpty())
+                                .map(StutterDetailListResponse::filterUniqueSentences)
+                                .flatMap(responseList ->
+                                        Mono.fromCallable(() ->
+                                                stutterDetailRepository.saveAll(
+                                                        responseList.stream()
+                                                                .map(stutterDetail -> StutterDetail.create(simulation, stutterDetail))
+                                                                .collect(Collectors.toList())
+                                                )
+                                        )
+                                );
                     } else if (response.statusCode().is4xxClientError()) {
                         return Mono.error(new CustomException(STUTTER_CLIENT_ERROR));
                     } else {

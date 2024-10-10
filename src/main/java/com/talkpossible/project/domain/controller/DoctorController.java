@@ -4,7 +4,9 @@ import com.talkpossible.project.domain.dto.doctor.request.LoginRequest;
 import com.talkpossible.project.domain.dto.doctor.response.LoginResponse;
 import com.talkpossible.project.domain.dto.doctor.request.SignupRequest;
 import com.talkpossible.project.domain.dto.doctor.response.ProfileResponse;
+import com.talkpossible.project.domain.dto.patient.request.PostPatient;
 import com.talkpossible.project.domain.service.DoctorService;
+import com.talkpossible.project.global.security.jwt.JwtTokenProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class DoctorController {
 
     private final DoctorService doctorService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 회원가입
     @PostMapping("/auth/signup")
