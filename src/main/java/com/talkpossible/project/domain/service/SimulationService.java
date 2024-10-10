@@ -1,15 +1,13 @@
 package com.talkpossible.project.domain.service;
 
-import com.talkpossible.project.domain.domain.Conversation;
-import com.talkpossible.project.domain.domain.Patient;
-import com.talkpossible.project.domain.domain.Simulation;
-import com.talkpossible.project.domain.domain.Situation;
+import com.talkpossible.project.domain.domain.*;
 import com.talkpossible.project.domain.dto.motion.response.UserMotionListResponse;
 import com.talkpossible.project.domain.dto.simulation.response.BasicInfoResponse;
 import com.talkpossible.project.domain.dto.simulation.response.PatientSimulationDetailResponse;
 import com.talkpossible.project.domain.dto.simulation.response.PatientSimulationListResponse;
 import com.talkpossible.project.domain.dto.simulation.response.UserSimulationResponse;
 import com.talkpossible.project.domain.dto.speechrate.request.SpeechRateRequest;
+import com.talkpossible.project.domain.dto.stutter.response.StutterDetailListResponse;
 import com.talkpossible.project.domain.repository.*;
 import com.talkpossible.project.domain.dto.simulation.request.UpdateSimulationRequest;
 import com.talkpossible.project.global.exception.CustomErrorCode;
@@ -28,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.talkpossible.project.global.exception.CustomErrorCode.*;
 
@@ -94,7 +93,7 @@ public class SimulationService {
         // 동작 감지 횟수 조회
         long motionCount = motionDetailRepository.countBySimulationId(simulationId);
 
-        return BasicInfoResponse.from(simulation, simulation.getPatient(), motionCount);
+        return BasicInfoResponse.from(simulation, simulation.getPatient(), motionCount, simulation.getFillerWordCount());
     }
 
     public UserMotionListResponse getMotionFeedback(final long simulationId) {
@@ -137,9 +136,9 @@ public class SimulationService {
                 .orElseThrow(() -> new CustomException(PATIENT_NOT_FOUND));
     }
 
+    // 발화속도 분석
     @Transactional
-    // 발화속도 저장
-    public void saveSpeechRate(long simulationId, SpeechRateRequest speechRateRequest) {
+    public void updateSpeechRate(long simulationId, SpeechRateRequest speechRateRequest) {
 
         // 권한 확인
         Long doctorId = jwtTokenProvider.getDoctorId();
@@ -176,7 +175,46 @@ public class SimulationService {
         log.info("*** 발화속도 측정 결과: {}", wordsPerMin); // EX) 88.79
 
         simulation.updateWordsPerMin(wordsPerMin);
-
     }
 
+    // 추임새 분석
+    @Transactional
+    public void updateFillerWordCount(final long simulationId, final String audioFileName) {
+
+        // 권한 확인
+        Long doctorId = jwtTokenProvider.getDoctorId();
+
+        //Simulation simulation = getSimulation(simulationId);
+        Simulation simulation = simulationRepository.findByIdWithLock(simulationId)
+                .orElseThrow(() -> new CustomException(SIMULATION_NOT_FOUND));
+
+        if(doctorId != simulation.getPatient().getDoctor().getId()) {
+            throw new CustomException(ACCESS_DENIED);
+        }
+
+        // 추임새 분석 요청
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("audio_name", audioFileName);
+
+        int fillerWordCount = webClient.post()
+                .uri("/chu_model")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
+                .retrieve()
+
+                // 예외 처리
+                .onStatus(status -> status.is4xxClientError(), response -> {
+                    return Mono.error(new CustomException(FILLER_WORD_CLIENT_ERROR));
+                })
+                .onStatus(status -> status.is5xxServerError(), response -> {
+                    return Mono.error(new CustomException(FILLER_WORD_SERVER_ERROR));
+                })
+
+                // 정상 응답된 경우
+                .bodyToMono(Integer.class)
+                .block();
+        log.info("*** 추임새 분석 결과: {}회", fillerWordCount);
+
+        simulation.updateFillerWordCount(fillerWordCount);
+    }
 }

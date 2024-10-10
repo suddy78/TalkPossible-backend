@@ -56,7 +56,8 @@ public class StutterDetailService {
                 .map(stutterDetail -> new StutterDetailResponse(
                         stutterDetail.getImageUrl(),
                         stutterDetail.getAudioUrl(),
-                        stutterDetail.getWords()
+                        stutterDetail.getWords(),
+                        stutterDetail.getType()
                 ))
                 .collect(Collectors.toList());
     }

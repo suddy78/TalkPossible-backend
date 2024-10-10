@@ -34,13 +34,17 @@ public class StutterDetail extends BaseTimeEntity {
     @Column(nullable = false)
     private String words; // 말 더듬은 어절
 
+    @Column(nullable = false)
+    private String type; // 말더듬 유형
+
     @Builder
     private StutterDetail (Simulation simulation,
-                           String imageUrl, String audioUrl, String words) {
+                           String imageUrl, String audioUrl, String words, String type) {
         this.simulation = simulation;
         this.imageUrl = imageUrl;
         this.audioUrl = audioUrl;
         this.words = words;
+        this.type = type;
     }
 
     public static StutterDetail create(Simulation simulation, StutterDetailResponse detailResponse) {
@@ -49,6 +53,7 @@ public class StutterDetail extends BaseTimeEntity {
                 .imageUrl(detailResponse.getImageUrl())
                 .audioUrl(detailResponse.getAudioUrl())
                 .words(detailResponse.getWord())
+                .type(detailResponse.getType())
                 .build();
     }
 
