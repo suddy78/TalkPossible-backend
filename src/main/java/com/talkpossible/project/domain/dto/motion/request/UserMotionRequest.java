@@ -1,5 +1,6 @@
 package com.talkpossible.project.domain.dto.motion.request;
 
+import java.sql.Time;
 import java.util.List;
 
 public record UserMotionRequest(
@@ -12,7 +13,7 @@ public record UserMotionRequest(
 ) {
     public record Motion(
             String motionName,
-            String timestamp
+            Time timestamp
     ) {
     }
 }

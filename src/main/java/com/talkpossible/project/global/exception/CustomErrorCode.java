@@ -38,7 +38,11 @@ public enum CustomErrorCode {
     STUTTER_CLIENT_ERROR(BAD_REQUEST, 6001, "말더듬 분석 중 오류가 발생했습니다. (Client Error)"),
     STUTTER_SERVER_ERROR(INTERNAL_SERVER_ERROR, 6002, "말더듬 분석 중 오류가 발생했습니다. (Server Error)"),
     SPEECH_RATE_CLIENT_ERROR(BAD_REQUEST, 6003, "발화속도 측정 중 오류가 발생했습니다. (Client Error)"),
-    SPEECH_RATE_SERVER_ERROR(INTERNAL_SERVER_ERROR, 6004, "발화속도 측정 중 오류가 발생했습니다. (Server Error)");
+    SPEECH_RATE_SERVER_ERROR(INTERNAL_SERVER_ERROR, 6004, "발화속도 측정 중 오류가 발생했습니다. (Server Error)"),
+    FILLER_WORD_CLIENT_ERROR(BAD_REQUEST, 6005, "추임색 분석 중 오류가 발생했습니다. (Client Error)"),
+    FILLER_WORD_SERVER_ERROR(INTERNAL_SERVER_ERROR, 6006, "추임색 분석 중 오류가 발생했습니다. (Server Error)"),
+
+    ;
 
     private final HttpStatus httpStatus;
     private final int code;

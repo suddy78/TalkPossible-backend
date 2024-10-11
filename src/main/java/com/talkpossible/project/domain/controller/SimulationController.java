@@ -47,6 +47,9 @@ public class SimulationController {
         // 말더듬 분석
         stutterDetailService.saveStutterDetail(simulationId, request.getVName());
 
+        // 추임새 분석
+        simulationService.updateFillerWordCount(simulationId, request.getVName());
+
         // 200 OK 상태 코드를 반환
         return ResponseEntity.ok().build();
     }
@@ -79,9 +82,9 @@ public class SimulationController {
 
     // 시뮬레이션 종료 후, 발화 속도 측정
     @PostMapping("/simulations/{simulationId}/speech-rate")
-    public ResponseEntity<Void> addSpeechRate(@PathVariable long simulationId, @RequestBody SpeechRateRequest speechRateRequest) {
+    public ResponseEntity<Void> updateSpeechRate(@PathVariable long simulationId, @RequestBody SpeechRateRequest speechRateRequest) {
 
-        simulationService.saveSpeechRate(simulationId, speechRateRequest);
+        simulationService.updateSpeechRate(simulationId, speechRateRequest);
 
         return ResponseEntity.ok().build();
     }
