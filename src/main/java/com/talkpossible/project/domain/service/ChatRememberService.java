@@ -79,26 +79,27 @@ public class ChatRememberService {
 
         selectRandomRestaurantAndMenu();
 
-        String query1 = "레스토랑에서 음식 주문을 하는 상황을 연습하려고 해.";
-        query1 += "\n조건은 다음과 같아.";
-        query1 += "\n1.너는 점원의 역할만 해줘. 처음 온 손님에게 응대를 해주면 돼.";
-        query1 += "\n2. 레스토랑은 " + selectedRestaurant + "이야.";
-        query1 += "\n3. 메뉴는 " + String.join(", ", selectedMenu) + "를 포함해 여러 가지가 있어.";
-        query1 += "\n4.무조건 응대는 존댓말로 해줘, 최대한 상냥하게.";
+        String query1 = "레스토랑에서 음식을 주문하는 상황을 연습하려고 해.";
+        query1 += "\n다음 조건을 잘 지켜줘.";
+        query1 += "\n1. 너는 레스토랑의 점원 역할을 맡아. 고객에게 첫 인사를 하고 응대해줘.";
+        query1 += "\n2. 레스토랑의 이름은 " + selectedRestaurant + "이야.";
+        query1 += "\n3. 제공하는 메뉴는 " + String.join(", ", selectedMenu) + " 등 여러 가지가 있어.";
+        query1 += "\n4. 고객이 주문할 때 메뉴 추천을 부탁할 수 있어. 그럴 경우에는 친절하게 추천해줘.";
+        query1 += "\n5. 주문을 받을 때 항상 존댓말로 응대하고, 상냥한 태도를 유지해줘.";
+        query1 += "\n6. 주문을 완료한 후에는 고객에게 음료나 후식 등의 추가적인 질문도 해줘.";
 
         return callGPT(userChatRequest, query1, simulationId);
-
     }
 
     public ChatResponse getGPTAnswerAboutLibrary(final UserChatRequest userChatRequest, final long simulationId) {
 
         String query1 = "도서관에서 책을 찾거나 책을 구매하려는 상황을 연습하려고 해.";
-        query1 += "\n조건은 다음과 같아.";
-        query1 += "\n1.너는 사서의 역할만 해줘. 책을 찾아 달라는 고객이라면 책을 찾아주면 돼.";
-        query1 += "\n2.책을 구매하려는 고객이라면 책을 찾지말고 바로 결제를 해주면 돼.";
-        query1 += "\n3.손님이 대화를 끝내기 전까지는 무조건 말의 마지막에, 상황에 맞는 질문을 고객에게 해줘, 예를 들어 '봉투 필요하신가요?', '영수증 드릴까요?'";
-        query1 += "\n4.손님과의 대화는 최소 4번이상 해줘";
-        query1 += "\n5.무조건 응대는 존댓말로 해줘, 최대한 상냥하게.";
+        query1 += "\n다음 조건을 잘 지켜줘.";
+        query1 += "\n1. 너는 도서관의 사서 역할을 맡아. 고객이 요청할 때마다 상냥하게 응대해줘.";
+        query1 += "\n2. 고객이 찾는 책이 있으면 해당 책을 찾아주고, 만약 구매하려는 고객이면 책 찾기 대신 결제를 도와줘.";
+        query1 += "\n3. 대화는 고객과 최소 4번 이상 주고받도록 해줘. 구체적인 질문이나 추가 요청을 할 수 있도록 유도해줘.";
+        query1 += "\n4. 항상 존댓말을 사용하고, 친절하게 대화를 이끌어줘.";
+        query1 += "\n5. 책을 찾거나 구매를 도운 후, 다른 책 추천이나 도서관 서비스에 대한 안내도 친절하게 제공해줘.";
 
         return callGPT(userChatRequest, query1, simulationId);
     }

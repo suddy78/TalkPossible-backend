@@ -1,10 +1,13 @@
 package com.talkpossible.project.domain.service;
 
 import com.talkpossible.project.domain.domain.Doctor;
+import com.talkpossible.project.domain.domain.Patient;
 import com.talkpossible.project.domain.dto.doctor.request.LoginRequest;
 import com.talkpossible.project.domain.dto.doctor.response.LoginResponse;
 import com.talkpossible.project.domain.dto.doctor.request.SignupRequest;
 import com.talkpossible.project.domain.dto.doctor.response.ProfileResponse;
+import com.talkpossible.project.domain.dto.patient.request.PostPatient;
+import com.talkpossible.project.domain.repository.PatientRepository;
 import com.talkpossible.project.global.security.jwt.JwtTokenProvider;
 import com.talkpossible.project.domain.repository.DoctorRepository;
 import com.talkpossible.project.global.enumType.Role;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.talkpossible.project.global.exception.CustomErrorCode.*;
 
@@ -22,6 +26,7 @@ import static com.talkpossible.project.global.exception.CustomErrorCode.*;
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -71,4 +76,12 @@ public class DoctorService {
         return ProfileResponse.from(doctor.getProfileImgUrl(), doctor.getName());
     }
 
+    // 환자 등록
+    @Transactional
+    public void postPatient(PostPatient postPatient, Long doctorId) {
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new CustomException(DOCTOR_NOT_FOUND));
+
+        patientRepository.save(Patient.create(doctor, postPatient));
+    }
 }
