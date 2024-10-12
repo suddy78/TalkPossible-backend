@@ -6,6 +6,8 @@ import com.talkpossible.project.domain.dto.motion.request.UserMotionRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Time;
+
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -25,12 +27,12 @@ public class MotionDetail extends BaseTimeEntity {
 
     private String motionName;
 
-    private String timestamp;
+    private Time timestamp;
 
     @Builder
     private MotionDetail(
             Simulation simulation, String situationDate,
-            String motionName, String timestamp, String videoUrl
+            String motionName, Time timestamp, String videoUrl
     ) {
         this.simulation = simulation;
         this.motionName = motionName;

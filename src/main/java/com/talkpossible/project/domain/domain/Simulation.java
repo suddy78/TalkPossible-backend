@@ -38,6 +38,8 @@ public class Simulation extends BaseTimeEntity {
 
     private Boolean isStutter;
 
+    private int fillerWordCount; // 추임새 횟수
+
     private String videoUrl;
 
     public void updateRunDateAndTotalTime(
@@ -52,6 +54,10 @@ public class Simulation extends BaseTimeEntity {
 
     public void updateWordsPerMin(float wordsPerMin) {
         this.wordsPerMin = wordsPerMin;
+    }
+
+    public void updateFillerWordCount(int fillerWordCount) {
+        this.fillerWordCount += fillerWordCount;
     }
 
 }

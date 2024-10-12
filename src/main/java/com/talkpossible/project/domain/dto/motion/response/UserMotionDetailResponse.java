@@ -15,7 +15,7 @@ public record UserMotionDetailResponse(
     public static UserMotionDetailResponse of(final MotionDetail motionDetail) {
         return UserMotionDetailResponse.builder()
                 .motionName(motionDetail.getMotionName())
-                .timestamp(motionDetail.getTimestamp())
+                .timestamp(motionDetail.getTimestamp() != null ? motionDetail.getTimestamp().toString() : null)
                 .build();
     }
 }
