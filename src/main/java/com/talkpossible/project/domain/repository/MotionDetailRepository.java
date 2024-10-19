@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MotionDetailRepository extends JpaRepository<MotionDetail, Long> {
 
-    List<MotionDetail> findAllBySimulationId(Long simulationId);
+    List<MotionDetail> findAllBySimulationIdOrderByTimestampAsc(Long simulationId);
 
     List<MotionDetail> findAllBySimulation(Simulation simulation);
 

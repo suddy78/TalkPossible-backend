@@ -15,4 +15,6 @@ public class StutterDetailResponse {
 
     private String word;
 
+    private String type;
+
 }

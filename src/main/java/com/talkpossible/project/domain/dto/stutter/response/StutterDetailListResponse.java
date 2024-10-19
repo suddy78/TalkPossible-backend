@@ -3,39 +3,47 @@ package com.talkpossible.project.domain.dto.stutter.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
-import java.util.List;
+import java.util.*;
 
 @Getter
 public class StutterDetailListResponse {
 
+    // Stutter type 매핑
+    private static final Map<String, String> STUTTER_TYPE_MAP = Map.of(
+            "Sound Repetition", "음절 반복",
+            "Prolongation", "연장"
+    );
+
     @JsonProperty("image_url")
-    private List<String> imageUrl;
+    private List<String> imageUrlList;
 
     @JsonProperty("audio_url")
-    private List<String> audioUrl;
+    private List<String> audioUrlList;
 
-    private List<String> words;
+    @JsonProperty("words")
+    private List<String> sentenceList;
 
-    // 리스트의 첫번째 요소값 추출
-    public String getFirstImageUrl() {
-        return (imageUrl != null && !imageUrl.isEmpty()) ? imageUrl.get(0) : null;
-    }
+    @JsonProperty("stutter_type")
+    private List<String> stutterTypeList;
 
-    public String getFirstAudioUrl() {
-        return (audioUrl != null && !audioUrl.isEmpty()) ? audioUrl.get(0) : null;
-    }
+    public List<StutterDetailResponse> filterUniqueSentences(){
+        Set<String> uniqueAudioUrls = new HashSet<>();
+        List<StutterDetailResponse> stutterList = new ArrayList<>();
 
-    public String getFirstWords() {
-        return (words != null && !words.isEmpty()) ? words.get(0) : null;
-    }
+        for(int i = 0; i < audioUrlList.size(); i++){
+            if(uniqueAudioUrls.add(audioUrlList.get(i))) {
+                stutterList.add(
+                        StutterDetailResponse.builder()
+                                .imageUrl(imageUrlList.get(i))
+                                .audioUrl(audioUrlList.get(i))
+                                .word(sentenceList.get(i))
+                                .type(STUTTER_TYPE_MAP.getOrDefault(stutterTypeList.get(i), "결과 없음"))
+                                .build()
+                );
+            }
+        }
 
-    // StutterDetailResponse 객체로 변환
-    public StutterDetailResponse toStutterDetailResponse() {
-        return StutterDetailResponse.builder()
-                .imageUrl(getFirstImageUrl())
-                .audioUrl(getFirstAudioUrl())
-                .word(getFirstWords())
-                .build();
+        return stutterList;
     }
 
 }
