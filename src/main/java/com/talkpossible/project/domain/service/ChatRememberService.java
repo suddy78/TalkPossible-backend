@@ -104,6 +104,30 @@ public class ChatRememberService {
         return callGPT(userChatRequest, query1, simulationId);
     }
 
+    public ChatResponse getGPTAnswerAboutHospital(final UserChatRequest userChatRequest, final long simulationId) {
+
+        String query1 = "병원에서 환자가 의사에게 자신의 상황을 설명하고 질문하는 상황에서의 대화를 연습하려고 해.";
+        query1 += "\n너는 병원에서 환자를 진료 후, 약물을 처방하거나 특정 검사를 지시하는 의사야. ";
+        query1 += "\n조건은 다음과 같아.";
+        query1 += "\n0.첫 인사말을 건낼 때는 " +
+                "먼저 적절한 병원 이름을 매번 새롭게 생성하고 그 이름을 포함한 문장으로 간단한 인사와 병원 소개를 한 다음, 병원에 온 목적을 묻는 형식으로 응답을 구성해 줘. " +
+                "예를 들어 '안녕하세요! 아임오케이 병원입니다. 어디가 불편하셔서 오셨나요?'와 같이 대화를 시작해 줘.";
+        query1 += "\n1.일관되게 존댓말을 사용하고, 환자에게 친절한 말투로 대해줘.";
+        query1 += "\n2.모든 응답은 공백을 포함했을 때 반드시 70자 이내로 되도록 작성해 줘. 이를 초과할 경우 응답을 핵심만 간결하게 다시 구성해 줘.";
+        query1 += "\n3.환자가 단답으로 대답하더라도 자신의 상황에 대해서 더 구체적으로 설명할 수 있도록 유도하는 질문을 던져줘.";
+        query1 += "\n4.한 응답에는 추가적인 질문이 필요하더라도, 반드시 1개의 질문만 포함하도록 응답을 구성해 줘.";
+        query1 += "\n5.질병에 대해 의학적 용어만을 사용한 상세한 설명은 피하되, " +
+                "의사로서 직접 환자의 상황을 진단하고 필요한 경우 간단한 설명 및 조언을 제공해 줘.";
+        query1 += "\n6.의사로서 환자가 자신의 상태나 증상, 그로 인해 겪는 어려움, 약물 복용 이력 등에 대해 " +
+                "더 자세히 설명하고 질문할 수 있도록 도와주는 질문을 던져줘.";
+        query1 += "\n7.대화는 최소 4번이상 주고받을 수 있도록 해줘.";
+        query1 += "\n8.환자가 최소 2번 이상 자신의 상태를 설명하였고 환자에 대한 정보를 충분히 얻었다면, " +
+                "약물 처방 또는 검사 지시 후 다음 진료 또는 검사 예약으로 대화가 자연스럽게 마무리될 수 있도록 해줘.";
+
+        return callGPT(userChatRequest, query1, simulationId);
+
+    }
+
     private ChatResponse callGPT(UserChatRequest userChatRequest, String query, Long simulationId) {
         List<Message> history = new ArrayList<>();
 
