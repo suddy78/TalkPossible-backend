@@ -48,7 +48,7 @@ public class SimulationController {
         stutterDetailService.saveStutterDetail(simulationId, request.getVName());
 
         // 추임새 분석
-        simulationService.updateFillerWordCount(simulationId, request.getVName());
+        //simulationService.updateFillerWordCount(simulationId, request.getVName());
 
         // 200 OK 상태 코드를 반환
         return ResponseEntity.ok().build();
