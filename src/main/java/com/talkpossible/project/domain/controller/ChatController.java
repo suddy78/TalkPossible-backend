@@ -41,4 +41,12 @@ public class ChatController {
         return chatStreamService.askToGpt(userChatRequest);
     }
 
+    @PostMapping("/chatGPT/hairsalon")
+    public ResponseEntity<ChatResponse> getResponseAboutHairSalon(
+            @RequestBody UserChatRequest userChatRequest,
+            @RequestHeader long simulationId
+    ) {
+        return ResponseEntity.ok(chatRememberService.getGPTAnswerAboutHairSalon(userChatRequest, simulationId));
+    }
+
 }
