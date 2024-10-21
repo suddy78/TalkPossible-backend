@@ -19,10 +19,10 @@ public class BasicInfoResponse {
     private Body body;
     private Header header;
 
-    public static BasicInfoResponse from(Simulation simulation, Patient patient, long motionCount, int chuCount){
+    public static BasicInfoResponse from(Simulation simulation, Patient patient, long motionCount){
         return BasicInfoResponse.builder()
                 .header(Header.create(patient))
-                .body(Body.create(simulation, patient, motionCount, chuCount))
+                .body(Body.create(simulation, patient, motionCount))
                 .build();
     }
 
@@ -52,9 +52,8 @@ public class BasicInfoResponse {
         private float wordsPerMin;
         private String videoUrl;
         private int motionCount;
-        private int chuCount;
 
-        public static Body create(Simulation simulation, Patient patient, long motionCount, int chuCount){
+        public static Body create(Simulation simulation, Patient patient, long motionCount){
             return Body.builder()
                     .patientName(patient.getName())
                     .runDate(formatDate(simulation.getRunDate()))
@@ -63,7 +62,6 @@ public class BasicInfoResponse {
                     .wordsPerMin(simulation.getWordsPerMin())
                     .videoUrl(simulation.getVideoUrl())
                     .motionCount((int) motionCount)
-                    .chuCount(chuCount)
                     .build();
         }
 
