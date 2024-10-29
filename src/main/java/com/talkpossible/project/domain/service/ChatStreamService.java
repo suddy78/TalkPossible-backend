@@ -65,7 +65,7 @@ public class ChatStreamService {
         query += "\n사용자가 메뉴판을 요청하면 메뉴를 임의로 생성해서 이름과 가격 정보를 제공하는데, '[{번호}] {메뉴} ({가격})' 형식으로 적어줘.";
         query += "\n음식에 대해 물어볼 경우 너가 만든 메뉴판을 바탕으로 상세 설명을 해줘.";
         query += "\n모든 문장 끝에는 마침표(온점, 물음표, 느낌표)를 붙여줘.";
-        query += "\n답변에는 이모지나 행동 묘사를 포함하지 않고, 순수한 텍스트 내용만 제공해줘.";
+        query += "\n어떠한 경우에도 답변에는 눈웃음 얼굴과 같은 이모지를 포함하거나 괄호를 치고 행동을 묘사하지 말아줘.";
 
         if(userChatRequest.cacheId() != null) {
             history = cacheService.getValue(userChatRequest.cacheId());
