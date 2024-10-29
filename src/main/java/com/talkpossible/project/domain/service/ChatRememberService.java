@@ -87,6 +87,7 @@ public class ChatRememberService {
         query1 += "\n4. 고객이 주문할 때 메뉴 추천을 부탁할 수 있어. 그럴 경우에는 친절하게 추천해줘.";
         query1 += "\n5. 주문을 받을 때 항상 존댓말로 응대하고, 상냥한 태도를 유지해줘.";
         query1 += "\n6. 주문을 완료한 후에는 고객에게 음료나 후식 등의 추가적인 질문도 해줘.";
+        query1 += "\n7. 답변에는 이모지나 행동 묘사를 포함하지 않고, 순수한 텍스트 내용만 제공해줘.";
 
         return callGPT(userChatRequest, query1, simulationId);
     }
@@ -100,6 +101,7 @@ public class ChatRememberService {
         query1 += "\n3. 대화는 고객과 최소 4번 이상 주고받도록 해줘. 구체적인 질문이나 추가 요청을 할 수 있도록 유도해줘.";
         query1 += "\n4. 항상 존댓말을 사용하고, 친절하게 대화를 이끌어줘.";
         query1 += "\n5. 책을 찾거나 구매를 도운 후, 다른 책 추천이나 서점 서비스에 대한 안내도 친절하게 제공해줘.";
+        query1 += "\n6. 답변에는 이모지나 행동 묘사를 포함하지 않고, 순수한 텍스트 내용만 제공해줘.";
 
         return callGPT(userChatRequest, query1, simulationId);
     }
@@ -120,6 +122,7 @@ public class ChatRememberService {
         query1 += "\n6.손님이 컷트를 하고 싶어한다면, 선호하는 머리 기장을 질문해줘. 손님이 파마를 하고 싶어한다면, 원하는 머리색이 무엇인지 질문해줘" +
                 "손님이 클리닉을 하고 싶어한다면, 두피클리닉을 원하는지 모발 클리닉을 원하는지 질문해줘, 손님이 파마를 하고 싶어한다면, 원하는 펌 스타일을 질문해줘.";
         query1 += "\n7.대화는 최소 4번이상 주고받을 수 있도록 해줘.";
+        query1 += "\n8.답변에는 이모지나 행동 묘사를 포함하지 않고, 순수한 텍스트 내용만 제공해줘.";
 
         return callGPT(userChatRequest, query1, simulationId);
     }
@@ -143,6 +146,7 @@ public class ChatRememberService {
         query1 += "\n7.대화는 최소 4번이상 주고받을 수 있도록 해줘.";
         query1 += "\n8.환자가 최소 2번 이상 자신의 상태를 설명하였고 환자에 대한 정보를 충분히 얻었다면, " +
                 "약물 처방 또는 검사 지시 후 다음 진료 또는 검사 예약으로 대화가 자연스럽게 마무리될 수 있도록 해줘.";
+        query1 += "\n9.답변에는 이모지나 행동 묘사를 포함하지 않고, 순수한 텍스트 내용만 제공해줘.";
 
         return callGPT(userChatRequest, query1, simulationId);
 
