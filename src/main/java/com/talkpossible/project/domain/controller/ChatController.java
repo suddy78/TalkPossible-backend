@@ -36,9 +36,25 @@ public class ChatController {
         return ResponseEntity.ok(chatRememberService.getGPTAnswerAboutLibrary(userChatRequest, simulationId));
     }
 
+    @PostMapping("/chatGPT/hospital")
+    public ResponseEntity<ChatResponse> getResponseAboutHospital(
+            @RequestBody UserChatRequest userChatRequest,
+            @RequestHeader long simulationId
+    ) {
+        return ResponseEntity.ok(chatRememberService.getGPTAnswerAboutHospital(userChatRequest, simulationId));
+    }
+
     @PostMapping(value = "/chatGPT/streaming", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ChatStreamUserResponse> getAiResponseStreaming(@RequestBody UserChatRequest userChatRequest) throws JsonProcessingException {
         return chatStreamService.askToGpt(userChatRequest);
+    }
+
+    @PostMapping("/chatGPT/hairsalon")
+    public ResponseEntity<ChatResponse> getResponseAboutHairSalon(
+            @RequestBody UserChatRequest userChatRequest,
+            @RequestHeader long simulationId
+    ) {
+        return ResponseEntity.ok(chatRememberService.getGPTAnswerAboutHairSalon(userChatRequest, simulationId));
     }
 
 }
